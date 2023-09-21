@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="235.763" height="88.995" viewBox="0 0 235.763 88.995">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_10984" data-name="Path 10984" d="M.277,16H19.468V74.218H.277Zm0,0" transform="translate(-0.277 -16)" fill="#35a3e5"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <path id="Path_10986" data-name="Path 10986" d="M32,.352H64.6v89H32Zm0,0" transform="translate(-32 -0.352)" fill="#35a3e5"/>
+    </clipPath>
+    <clipPath id="clip-path-3">
+      <path id="Path_10988" data-name="Path 10988" d="M279,16h19.406V74.218H279Zm0,0" transform="translate(-279 -16)" fill="#35a3e5"/>
+    </clipPath>
+    <clipPath id="clip-path-4">
+      <path id="Path_10990" data-name="Path 10990" d="M231,.352h31.826v89H231Zm0,0" transform="translate(-231 -0.352)" fill="#35a3e5"/>
+    </clipPath>
+  </defs>
+  <g id="Workout_Logo_1_" data-name="Workout Logo (1)" transform="translate(-0.277 -0.352)">
+    <g id="Group_3169" data-name="Group 3169" transform="translate(0.277 12.499)" clip-path="url(#clip-path)">
+      <path id="Path_10983" data-name="Path 10983" d="M6.6,73.985H19.256V16.867H6.6c-6.325,0-6.325,4.151-6.325,6.346V67.638C.277,69.837.277,73.985,6.6,73.985Zm0,0" transform="translate(-0.277 -16.194)" fill="#35a3e5"/>
+    </g>
+    <g id="Group_3170" data-name="Group 3170" transform="translate(24.902 0.352)" clip-path="url(#clip-path-2)">
+      <path id="Path_10985" data-name="Path 10985" d="M32.875,16.383V83.019c0,2.2,0,6.349,6.328,6.349H58.688c5.819,0,5.819-4.151,5.819-6.349V6.862c0-2.2,0-6.346-5.819-6.346H39.2c-6.328,0-6.328,4.151-6.328,6.346Zm0,0" transform="translate(-32.196 -0.388)" fill="#35a3e5"/>
+    </g>
+    <g id="Group_3171" data-name="Group 3171" transform="translate(216.634 12.499)" clip-path="url(#clip-path-3)">
+      <path id="Path_10987" data-name="Path 10987" d="M279.957,73.985h12.654c6.325,0,6.325-4.148,6.325-6.346V23.214c0-2.2,0-6.346-6.325-6.346H279.957Zm0,0" transform="translate(-279.214 -16.194)" fill="#35a3e5"/>
+    </g>
+    <g id="Group_3172" data-name="Group 3172" transform="translate(179.374 0.352)" clip-path="url(#clip-path-4)">
+      <path id="Path_10989" data-name="Path 10989" d="M231.059,56.047V83.019c0,2.2,0,6.349,6.325,6.349h18.978c6.329,0,6.329-4.151,6.329-6.349V6.862c0-2.2,0-6.346-6.329-6.346H237.384c-6.325,0-6.325,4.151-6.325,6.346Zm0,0" transform="translate(-231.013 -0.388)" fill="#35a3e5"/>
+    </g>
+  </g>
+</svg>

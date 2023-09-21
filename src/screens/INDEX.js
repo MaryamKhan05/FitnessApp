@@ -1,0 +1,10 @@
+export { default as Login } from "./Login-1";
+export { default as Signin } from "./Signin";
+export { default as Signup } from "./Signup";
+export { default as Home } from "./Home";
+export { default as Terms } from "./Terms";
+export { default as Release } from "./Release";
+export { default as ForgotPassword } from "./ForgotPassword/ForgotPassword";
+export { default as Confirmation } from "./ForgotPassword/Confirmation";
+export { default as Profile } from "./Profile";
+export { default as ProfileInfo } from "./PersonalInfo";

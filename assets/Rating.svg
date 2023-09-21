@@ -1,0 +1,10 @@
+<svg id="Rating" xmlns="http://www.w3.org/2000/svg" width="225.594" height="36.725" viewBox="0 0 225.594 36.725">
+  <rect id="Rating_background" data-name="Rating background" width="225.594" height="36.725" fill="rgba(0,0,0,0)"/>
+  <g id="Stars">
+    <path id="star" d="M18.362,28.039,29.71,34.888,26.7,21.98l10.026-8.685-13.2-1.12L18.362,0,13.2,12.174,0,13.294,10.026,21.98,7.014,34.888Z" fill="#fa0"/>
+    <path id="Shape_Copy" data-name="Shape Copy" d="M18.362,28.039,29.71,34.888,26.7,21.98l10.026-8.685-13.2-1.12L18.362,0,13.2,12.174,0,13.294,10.026,21.98,7.014,34.888Z" transform="translate(47.217)" fill="#fa0"/>
+    <path id="Shape_Copy_2" data-name="Shape Copy 2" d="M18.362,28.039,29.71,34.888,26.7,21.98l10.026-8.685-13.2-1.12L18.362,0,13.2,12.174,0,13.294,10.026,21.98,7.014,34.888Z" transform="translate(94.435)" fill="#fa0"/>
+    <path id="Shape_Copy_3" data-name="Shape Copy 3" d="M18.362,28.039,29.71,34.888,26.7,21.98l10.026-8.685-13.2-1.12L18.362,0,13.2,12.174,0,13.294,10.026,21.98,7.014,34.888Z" transform="translate(141.652)" fill="#fa0"/>
+    <path id="Shape_Copy_4" data-name="Shape Copy 4" d="M18.362,28.039,29.71,34.888,26.7,21.98l10.026-8.685-13.2-1.12L18.362,0,13.2,12.174,0,13.294,10.026,21.98,7.014,34.888Z" transform="translate(188.869)" fill="#fa0"/>
+  </g>
+</svg>
