@@ -64,7 +64,7 @@ const ForgotLayout = (props) => {
           }}
           onPress={() => navigation.navigate("Signin")}
         >
-            <Ionicons name="arrow-back" size={18} color="#1A347A" />
+            <Ionicons name="arrow-back" size={18} color="#1A347A" style={{marginRight:10}}/>
           <Text style={{ fontSize: 14, fontFamily: "PoppinsRegular" ,color:'#1A347A'}}>
             Back To Login
           </Text>

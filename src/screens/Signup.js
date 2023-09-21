@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TextInput,
 } from "react-native";
+import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   ActiveButton,
@@ -20,13 +21,15 @@ import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
 
 const Signup = () => {
-  const size = 20,
-    color = "#B2B6B7";
+  const size = 20
+   const color = "#B2B6B7";
   const navigation = useNavigation();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [name, setName] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [conEye, setconEye] = useState(false);
+  const [passEye, setPassEye] = useState(false);
   return (
     <RegLayout>
       <Text style={Styles.regTopText}>Signup</Text>
@@ -42,18 +45,46 @@ const Signup = () => {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TextInput
-        placeholder="Password"
-        style={Styles.input}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TextInput
-        placeholder="Confirm Password"
-        style={Styles.input}
-        value={confirmPassword}
-        onChangeText={(text) => setConfirmPassword(text)}
-      />
+      <View style={[Styles.input]}>
+        <TextInput placeholder="Password" />
+        <TouchableOpacity onPress={() => setconEye(!conEye)}>
+          {passEye ? (
+            <Feather
+              name="eye"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          ) : (
+            <Feather
+              name="eye-off"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+      <View style={Styles.input}>
+        <TextInput placeholder="Confirm Password" />
+        <TouchableOpacity onPress={() => setconEye(!conEye)}>
+          {conEye ? (
+            <Feather
+              name="eye"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          ) : (
+            <Feather
+              name="eye-off"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
       <View style={styles.purpleTextContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialCommunityIcons

@@ -52,12 +52,12 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     padding: 20,
-    shadowColor: "#F2F3F4",
+    shadowColor: "black",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.09,
     shadowRadius: 4,
     elevation: 3,
     width: "90%",

@@ -20,7 +20,7 @@ const ForgotPassword = () => {
         <ForgotLayout
           heading="Forgot Password?"
           text="No worries, we'll send you reset instruction"
-          flow="Confirmation"
+          flow="NewPassword"
           title="Reset Password"
           source={require("../../../assets/ferioLabs/key.png")}
         >

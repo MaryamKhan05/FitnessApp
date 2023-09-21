@@ -8,16 +8,25 @@ import {
   TextInput,
 } from "react-native";
 
-import { ActiveButton, BorderButton, Divider, RegNav } from "../components/INDEX";
+import {
+  ActiveButton,
+  BorderButton,
+  Divider,
+  RegNav,
+} from "../components/INDEX";
 import RegLayout from "../layouts/RegistrationLayout";
 import colors from "../../assets/colors/colors";
 import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
+import Feather from 'react-native-vector-icons/Feather'
 
 const Signin = () => {
+  const size = 20;
+  const color = "#B2B6B7";
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const navigation=useNavigation()
+  const [conEye, setconEye] = useState(false);
+  const navigation = useNavigation();
   return (
     <RegLayout>
       <Text style={Styles.regTopText}>Signin</Text>
@@ -27,20 +36,34 @@ const Signin = () => {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TextInput
-        placeholder="Password"
-        style={Styles.input}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TouchableOpacity onPress={()=>navigation.navigate("ForgotPassword")}>
-        <Text style={[Styles.text, { textAlign: "right", marginRight: 10 }]}>
+      <View style={Styles.input}>
+        <TextInput placeholder="Confirm Password" />
+        <TouchableOpacity onPress={() => setconEye(!conEye)}>
+          {conEye ? (
+            <Feather
+              name="eye"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          ) : (
+            <Feather
+              name="eye-off"
+              size={size}
+              color={color}
+              style={Styles.eyeIcon}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+        <Text style={[Styles.text, { textAlign: "right", marginRight: 15 }]}>
           Forgot Password?
         </Text>
       </TouchableOpacity>
       <View style={Styles.buttonTop}>
         <ActiveButton title="Sign In" onPress="TabNav" />
-        <Divider/>
+        <Divider />
         <RegNav
           heading="Don't have an account?"
           text="Sign Up"

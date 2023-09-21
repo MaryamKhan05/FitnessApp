@@ -18,7 +18,7 @@ const Confirmation = () => {
         <ForgotLayout
           heading="Password Reset"
           text="Your password has been successfully reset. Tap below to get in the flow."
-          flow=""
+          flow="TabNav"
           title="Continue"
           source={require("../../../assets/ferioLabs/tick.png")}
         >

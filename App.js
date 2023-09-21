@@ -15,24 +15,20 @@ export default function App() {
     PoppinsRegular: require("./assets/font/Poppins/Poppins-Regular.ttf"),
     PoppinsSemi: require("./assets/font/Poppins/Poppins-SemiBold.ttf"),
   });
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  
 
   if (!fontsLoaded) {
     return null;
   }
   return (
     <View style={{ flex: 1 }}>
-      {/* <AppNav/> */}
+      <AppNav/>
       {/* <ProfileInfo/> */}
       {/* <Login/> */}
       {/* <RegLayout>
         <Text>hello</Text>
       </RegLayout> */}
-      <Onboarding/>
+      {/* <Onboarding/> */}
        {/* <Home/> */}
        {/* <Terms/> */}
        {/* <Release/> */}

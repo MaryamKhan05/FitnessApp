@@ -11,6 +11,9 @@ export default styles = StyleSheet.create({
     margin: 7,
     fontSize: 14,
     fontFamily: "PoppinsRegular",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems:'center'
   },
   text: {
     fontSize: 14,
@@ -45,17 +48,32 @@ export default styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  homeText:{
-    fontSize:16,
-    fontFamily:'PoppinsMedium',
+  homeText: {
+    fontSize: 16,
+    fontFamily: "PoppinsMedium",
   },
-  forgotInput:{
-    borderColor:"#E5E6E7",
-    borderWidth:1,
-    borderRadius:6,
-    width:326,
+  forgotInput: {
+    borderColor: "#E5E6E7",
+    borderWidth: 1,
+    borderRadius: 6,
+    width: 326,
     // height:35,
-    padding:10,
-    fontFamily:'PoppinsRegular'
+    padding: 10,
+    fontFamily: "PoppinsRegular",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+    backgroundColor: "white",
+  },
+  eyeIcon:{
+    marginRight:5
+  },
+  profileInput:{
+    borderColor: "#E5E6E7",
+    borderWidth: 1,
+    borderRadius: 6,
+    width: 173,
+    padding: 10,
+    color:'#666666'
   }
 });

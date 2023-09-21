@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Login, Signin, Signup, Home, Terms, Release,ForgotPassword,Confirmation,ProfileInfo } from "../screens/INDEX";
+import { Login, Signin, Signup, Home, Terms, Release,ForgotPassword,Confirmation,ProfileInfo, Onboarding, NewPassword } from "../screens/INDEX";
 import TabNav from "./TabNav";
 import HomeStack from "./TabNav";
 
@@ -14,6 +14,11 @@ const AppNav = () => {
     <NavigationContainer>
       {/* {loggedIn ? ( */}
       <Stack.Navigator>
+        <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Login"
           component={Login}
@@ -37,6 +42,11 @@ const AppNav = () => {
         <Stack.Screen
           name="Confirmation"
           component={Confirmation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NewPassword"
+          component={NewPassword}
           options={{ headerShown: false }}
         />
         <Stack.Screen

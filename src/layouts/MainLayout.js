@@ -42,7 +42,7 @@ const MainLyout = (props) => {
       </ImageBackground>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
-          style={{ backgroundColor: "white", flex: 1, alignItems: "center" }}
+          style={{ backgroundColor: "white", flex: 1, alignItems: "center",marginTop:10 }}
         >
           {props.children}
         </View>

@@ -4,8 +4,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
+import { useNavigation } from "@react-navigation/native";
 
 const PersonalInfo = () => {
+  const navigation = useNavigation();
   return (
     <MainLyout heading="Personal Information">
       <View style={styles.card}>
@@ -19,6 +21,7 @@ const PersonalInfo = () => {
             zIndex: 1,
             right: 20,
           }}
+          onPress={() => navigation.navigate("EditProfile")}
         >
           <MaterialCommunityIcons
             name="pencil"

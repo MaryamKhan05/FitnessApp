@@ -13,6 +13,8 @@ import {
   Profile,
   Exercises,
   Onboarding,
+  EditProfile,
+  UpdatePassword,
 } from "../screens/INDEX";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -88,10 +90,16 @@ const HomeStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Onboarding"
-        component={Onboarding}
+        name="EditProfile"
+        component={EditProfile}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="UpdatePassword"
+        component={UpdatePassword}
+        options={{ headerShown: false }}
+      />
+     
     </Stack.Navigator>
   );
 };
