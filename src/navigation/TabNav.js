@@ -11,6 +11,8 @@ import {
   Confirmation,
   ProfileInfo,
   Profile,
+  Exercises,
+  Onboarding,
 } from "../screens/INDEX";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -47,8 +49,8 @@ function TabNav() {
 }
 const HomeStack = () => {
   return (
-    <Stack.Navigator >
-       <Stack.Screen
+    <Stack.Navigator initialRouteName="Onboarding">
+      <Stack.Screen
         name="Home"
         component={Home}
         options={{
@@ -62,17 +64,32 @@ const HomeStack = () => {
       <Stack.Screen
         name="Terms"
         component={Terms}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome5 name="running" size={size} color={color} />
+          ),
+        }}
       />
       <Stack.Screen
         name="Release"
         component={Release}
         options={{ headerShown: false }}
       />
-     
+
       <Stack.Screen
         name="ProfileInfo"
         component={ProfileInfo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Exercises"
+        component={Exercises}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Onboarding"
+        component={Onboarding}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

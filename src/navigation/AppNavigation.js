@@ -40,28 +40,8 @@ const AppNav = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Terms"
-          component={Terms}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Release"
-          component={Release}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="TabNav"
           component={TabNav}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ProfileInfo"
-          component={ProfileInfo}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

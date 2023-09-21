@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 
-import { Home, Login, ProfileInfo, Signin, Signup, Terms,Release, Profile } from "./src/screens/INDEX";
+import { Home, Login, ProfileInfo, Signin, Signup, Terms,Release, Profile, Onboarding } from "./src/screens/INDEX";
 import MainLyout from "./src/layouts/MainLayout";
 import AppNav from "./src/navigation/AppNavigation";
 import RegLayout from "./src/layouts/RegistrationLayout";
@@ -26,13 +26,13 @@ export default function App() {
   }
   return (
     <View style={{ flex: 1 }}>
-      <AppNav/>
+      {/* <AppNav/> */}
       {/* <ProfileInfo/> */}
       {/* <Login/> */}
       {/* <RegLayout>
         <Text>hello</Text>
       </RegLayout> */}
-      
+      <Onboarding/>
        {/* <Home/> */}
        {/* <Terms/> */}
        {/* <Release/> */}

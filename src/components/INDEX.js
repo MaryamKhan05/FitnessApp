@@ -4,3 +4,4 @@ export { default as RegNav } from "./regNav";
 export { default as Card } from "./card";
 export { default as Divider } from "./divider";
 export { default as ProfileCard } from "./profileCard";
+export { default as Slider } from "./slider";

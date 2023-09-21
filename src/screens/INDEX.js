@@ -8,3 +8,5 @@ export { default as ForgotPassword } from "./ForgotPassword/ForgotPassword";
 export { default as Confirmation } from "./ForgotPassword/Confirmation";
 export { default as Profile } from "./Profile";
 export { default as ProfileInfo } from "./PersonalInfo";
+export { default as Exercises } from "./Excercises";
+export { default as Onboarding } from "./Onboarding";

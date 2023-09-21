@@ -84,7 +84,7 @@ const Home = () => {
       </TouchableOpacity>
 
       <View style={{ marginTop: "10%" }}>
-        <ActiveButton title="Get Started" />
+        <ActiveButton title="Get Started" onPress="Exercises" />
       </View>
     </MainLyout>
   );
