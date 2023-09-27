@@ -13,3 +13,4 @@ export { default as Exercises } from "./Excercises";
 export { default as Onboarding } from "./Onboarding";
 export { default as EditProfile } from "./EditProfile";
 export { default as UpdatePassword } from "./UpdatePassword";
+export { default as Equiments } from "./Equipments";

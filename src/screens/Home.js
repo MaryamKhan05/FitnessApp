@@ -1,16 +1,45 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Styles from "./Styles";
 import { ActiveButton, Card } from "../components/INDEX";
 import colors from "../../assets/colors/colors";
 import MainLyout from "../layouts/MainLayout";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
+  const navigation = useNavigation();
   const [upper, setUpper] = useState(false);
   const [core, setCore] = useState(false);
   const [lower, setLower] = useState(false);
+  const [loading, setLoading] = useState(false);
   const size = 20;
   const color = "green";
+
+  const handleNext = async () => {
+    try {
+      if (upper) {
+        await AsyncStorage.setItem("Category", "upperBody");
+      } else if (lower) {
+        await AsyncStorage.setItem("Category", "lowerBody");
+      } else {
+        await AsyncStorage.setItem("Category", "core");
+      }
+      console.log("hehe saved");
+      navigation.navigate("Exercises");
+    } catch (e) {
+      console.log("error saving category to storage", e);
+    }
+  };
+
+  
   return (
     <MainLyout heading="Today's Workout">
       <Text
@@ -83,9 +112,9 @@ const Home = () => {
         </View>
       </TouchableOpacity>
 
-      <View style={{ marginTop: "10%" }}>
+      <TouchableOpacity style={{ marginTop: "5%" }} onPress={handleNext}>
         <ActiveButton title="Get Started" onPress="Exercises" />
-      </View>
+      </TouchableOpacity>
     </MainLyout>
   );
 };

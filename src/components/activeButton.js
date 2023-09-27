@@ -6,21 +6,20 @@ import { useNavigation } from "@react-navigation/native";
 const ActiveButton = (props) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
+    <View
       style={{
         backgroundColor: colors.primary,
         borderRadius: 5,
-        width: 335,
+        width: props.width ? props.width : 335,
         height: 50,
         alignItems: "center",
         justifyContent: "center",
         margin: 10,
         alignSelf: "center",
       }}
-      onPress={() => navigation.navigate(props.onPress)}
     >
       <Text style={styles.text}>{props.title}</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

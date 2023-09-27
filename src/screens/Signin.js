@@ -18,7 +18,7 @@ import RegLayout from "../layouts/RegistrationLayout";
 import colors from "../../assets/colors/colors";
 import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
-import Feather from 'react-native-vector-icons/Feather'
+import Feather from "react-native-vector-icons/Feather";
 
 const Signin = () => {
   const size = 20;
@@ -62,7 +62,9 @@ const Signin = () => {
         </Text>
       </TouchableOpacity>
       <View style={Styles.buttonTop}>
-        <ActiveButton title="Sign In" onPress="TabNav" />
+        <TouchableOpacity onPress={() => navigation.navigate("TabNav")}>
+          <ActiveButton title="Sign In" />
+        </TouchableOpacity>
         <Divider />
         <RegNav
           heading="Don't have an account?"

@@ -40,8 +40,8 @@ export default styles = StyleSheet.create({
     marginTop: "15%",
   },
   homeImage: {
-    height: 60,
-    width: 60,
+    height: 80,
+    width: 100,
   },
   homeRow: {
     flexDirection: "row",
@@ -49,7 +49,7 @@ export default styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   homeText: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "PoppinsMedium",
   },
   forgotInput: {
@@ -57,7 +57,6 @@ export default styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     width: 326,
-    // height:35,
     padding: 10,
     fontFamily: "PoppinsRegular",
     flexDirection: "row",

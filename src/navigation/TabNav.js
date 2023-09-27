@@ -15,14 +15,18 @@ import {
   Onboarding,
   EditProfile,
   UpdatePassword,
+  Equiments,
 } from "../screens/INDEX";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import colors from "../../assets/colors/colors";
+import { View } from "react-native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function TabNav() {
+  
   return (
+
     <Tab.Navigator screenOptions={{ tabBarActiveTintColor: colors.primary }}>
       <Tab.Screen
         name="HomeStack"
@@ -51,7 +55,7 @@ function TabNav() {
 }
 const HomeStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Onboarding">
+    <Stack.Navigator initialRouteName="Equiments">
       <Stack.Screen
         name="Home"
         component={Home}
@@ -62,6 +66,11 @@ const HomeStack = () => {
             <FontAwesome5 name="running" size={size} color={color} />
           ),
         }}
+      />
+      <Stack.Screen
+        name="Equiments"
+        component={Equiments}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Terms"
@@ -99,7 +108,6 @@ const HomeStack = () => {
         component={UpdatePassword}
         options={{ headerShown: false }}
       />
-     
     </Stack.Navigator>
   );
 };

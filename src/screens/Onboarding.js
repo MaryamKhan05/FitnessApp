@@ -15,7 +15,7 @@ const Onboarding = () => {
       if (currentIndex == 2) {
         navigation.navigate("Login");
       }
-    }, 4000);
+    }, 2000);
   }, [currentIndex]);
   return (
     <View

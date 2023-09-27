@@ -8,7 +8,7 @@ const Divider = (props) => {
         backgroundColor: props.backgroundColor
           ? props.backgroundColor
           : "white",
-        width: "80%",
+        width: props.width ? props.width : "80%",
         alignSelf: "center",
         marginVertical: "4%",
         height: 1,
