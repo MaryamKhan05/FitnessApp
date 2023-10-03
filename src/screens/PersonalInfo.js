@@ -1,13 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PersonalInfo = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+
+  useEffect(() => {
+    getNameHandler();
+    getMailHandler();
+  }, []);
+  const getNameHandler = async () => {
+    try {
+      let n = await AsyncStorage.getItem("Name");
+      setName(n);
+    } catch (e) {
+      console.log("Error getting name from the storage", e);
+    }
+  };
+  const getMailHandler = async () => {
+    try {
+      let n = await AsyncStorage.getItem("Email");
+      setEmail(n);
+    } catch (e) {
+      console.log("Error getting email from the storage", e);
+    }
+  };
   return (
     <MainLyout heading="Personal Information">
       <View style={styles.card}>
@@ -54,9 +78,7 @@ const PersonalInfo = () => {
             style={{ height: 70, width: 70, alignSelf: "center" }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
-          Maryam Khan
-        </Text>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>{name}</Text>
         <View style={styles.divider} />
         <View
           style={{
@@ -67,7 +89,7 @@ const PersonalInfo = () => {
           }}
         >
           <Text style={styles.text}>Username:</Text>
-          <Text style={[styles.text, styles.details]}>Maryam</Text>
+          <Text style={[styles.text, styles.details]}>{name}</Text>
         </View>
         <View
           style={{
@@ -78,7 +100,7 @@ const PersonalInfo = () => {
           }}
         >
           <Text style={styles.text}>Email:</Text>
-          <Text style={[styles.text, styles.details]}>Maryam@gmail.com</Text>
+          <Text style={[styles.text, styles.details]}>{email}</Text>
         </View>
       </View>
     </MainLyout>

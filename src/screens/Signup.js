@@ -29,6 +29,7 @@ import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Signup = () => {
   const size = 20;
@@ -44,23 +45,58 @@ const Signup = () => {
   const [liability, setLiability] = useState(false);
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(false);
+
+  useEffect(() => {
+    getFlagHandler();
+  }, []);
+
+  const getFlagHandler = async () => {
+    setLoading(true);
+    try {
+      const f = await AsyncStorage.getItem("eFlag");
+      if (f) {
+        setFlag(true);
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    } catch (e) {
+      console.log("errro getting flag from storage", e);
+    }
+  };
 
   useEffect(() => {
     if (token) {
-      // Alert.alert("Signed Up Successfully ! ");
-      navigation.navigate("TabNav");
+      Alert.alert("Signed Up Successfully ! ");
+      if (flag) {
+        navigation.navigate("TabNav");
+      } else {
+        navigation.navigate("Equiments");
+      }
       // setTimeout(() => {
       // }, 2000);
     }
   }, [token]);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (terms && liability) {
       setLoading(true);
       if (password == confirmPassword) {
         setLoading(true);
+        try {
+          await AsyncStorage.setItem("Name", name);
+          console.log("Name saved to storage");
+        } catch (e) {
+          console.log("error saving name", e);
+        }
+        try {
+          await AsyncStorage.setItem("Email", email);
+          console.log("Email saved to storage");
+        } catch (e) {
+          console.log("error saving Email", e);
+        }
         createUserWithEmailAndPassword(auth, email, password)
-
           .then((userCredential) => {
             setToken(userCredential._tokenResponse.idToken);
             setLoading(false);
@@ -179,10 +215,9 @@ const Signup = () => {
                 />
               </TouchableOpacity>
             )}
-<TouchableOpacity onPress={()=>navigation.navigate("Terms")}>
-
-            <Text style={styles.purpleText}>Terms of Services</Text>
-</TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Terms")}>
+              <Text style={styles.purpleText}>Terms of Services</Text>
+            </TouchableOpacity>
           </View>
           <View style={{ flexDirection: "row" }}>
             {liability ? (
@@ -202,14 +237,12 @@ const Signup = () => {
                 />
               </TouchableOpacity>
             )}
-            <TouchableOpacity onPress={()=>navigation.navigate("Release")}>
-
-
-            <Text style={styles.purpleText}>Release of Liability</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Release")}>
+              <Text style={styles.purpleText}>Release of Liability</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{marginTop:hp(6)}}>
+        <View style={{ marginTop: hp(6) }}>
           <TouchableOpacity onPress={handleSignUp}>
             <ActiveButton title="Sign Up" />
           </TouchableOpacity>

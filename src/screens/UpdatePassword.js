@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,29 +15,41 @@ import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import Styles from "./Styles";
 import ActiveButton from "../components/activeButton";
+import { updatePass, updatePassword } from "../firebase/firebase";
 const UpdatePassword = () => {
+  const [pass, setPass] = useState();
+  const [newPass, setNewPass] = useState();
+  const [confirmPass, setConfirmPass] = useState();
   return (
     <MainLyout heading="Personal Information">
       <View style={styles.card}>
         <TextInput
           style={Styles.forgotInput}
-          placeholder="Maryam"
+          placeholder="Current Password"
           placeholderTextColor={"#666666"}
+          onChangeText={(text) => setPass(text)}
+          autoCapitalize="none"
         />
 
         <TextInput
           style={Styles.forgotInput}
-          placeholder="Maryam@gmail.com"
+          placeholder="New Password"
           placeholderTextColor={"#666666"}
+          onChangeText={(text) => setNewPass(text)}
+          autoCapitalize="none"
         />
         <TextInput
           style={Styles.forgotInput}
-          placeholder="Maryam@gmail.com"
+          placeholder="Confirm New Password"
           placeholderTextColor={"#666666"}
+          onChangeText={(text) => setConfirmPass(text)}
+          autoCapitalize="none"
         />
 
         <View style={{ marginTop: 20 }}>
-          <ActiveButton title="Save Changes" />
+          <TouchableOpacity onPress={()=>updatePass(pass,newPass)}>
+            <ActiveButton title="Save Changes" />
+          </TouchableOpacity>
         </View>
       </View>
     </MainLyout>
@@ -79,15 +91,15 @@ const styles = StyleSheet.create({
     padding: 0.1,
     marginTop: 22,
   },
-  input:{
+  input: {
     borderColor: "#E5E6E7",
     borderWidth: 1,
     borderRadius: 6,
     width: 297,
     padding: 10,
-    color:'#666666',
-    marginVertical:5
-  }
+    color: "#666666",
+    marginVertical: 5,
+  },
 });
 
 export default UpdatePassword;

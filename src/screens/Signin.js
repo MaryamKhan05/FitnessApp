@@ -49,7 +49,7 @@ const Signin = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("Equiments");
+        navigation.navigate("TabNav");
         setLoading(false);
       }
     });

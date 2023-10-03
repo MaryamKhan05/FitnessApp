@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,10 @@ import {
   TextInput,
   ImageBackground,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
 import MainLyout from "../layouts/MainLayout";
@@ -15,7 +19,50 @@ import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import Styles from "./Styles";
 import ActiveButton from "../components/activeButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { updatePassword } from "../firebase/firebase";
+import { auth } from "../FirebaseConfig";
 const EditProfile = () => {
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [newName, setNewName] = useState();
+  const [newEmail, setNewEmail] = useState();
+
+  useEffect(() => {
+    getNameHandler();
+    getMailHandler();
+  }, []);
+  const getNameHandler = async () => {
+    try {
+      let n = await AsyncStorage.getItem("Name");
+      setName(n);
+    } catch (e) {
+      console.log("Error getting name from the storage", e);
+    }
+  };
+  const getMailHandler = async () => {
+    try {
+      let n = await AsyncStorage.getItem("Email");
+      setEmail(n);
+    } catch (e) {
+      console.log("Error getting email from the storage", e);
+    }
+  };
+  // const saveNewInfoHandler = async () => {
+  //   try {
+  //     await AsyncStorage.setItem("Name", newName);
+  //     console.log("new name saved");
+  //   } catch (e) {
+  //     console.log("Error saving new name ", e);
+  //   }
+  //   try {
+  //     await AsyncStorage.setItem("Email", newEmail);
+  //     console.log("new email saved");
+  //   } catch (e) {
+  //     console.log("Error saving new email  ", e);
+  //   }
+  // };
+
   return (
     <MainLyout heading="Personal Information">
       <View style={styles.card}>
@@ -52,9 +99,7 @@ const EditProfile = () => {
             <Feather name="camera" size={30} color={"white"} />
           </ImageBackground>
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
-          Maryam Khan
-        </Text>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>{name}</Text>
         <View style={styles.divider} />
         <View
           style={{
@@ -68,8 +113,9 @@ const EditProfile = () => {
           <Text style={styles.text}>Username:</Text>
           <TextInput
             style={Styles.profileInput}
-            placeholder="Maryam"
+            placeholder={name}
             placeholderTextColor={"#666666"}
+            onChangeText={(text) => setNewName(text)}
           />
         </View>
         <View
@@ -83,12 +129,15 @@ const EditProfile = () => {
           <Text style={styles.text}>Email:</Text>
           <TextInput
             style={Styles.profileInput}
-            placeholder="Maryam@gmail.com"
+            placeholder={auth.currentUser.email}
             placeholderTextColor={"#666666"}
+            onChangeText={(text) => setNewEmail(text)}
           />
         </View>
         <View style={{ marginTop: 20 }}>
-          <ActiveButton title="Save" />
+          <TouchableOpacity onPress={{}}>
+            <ActiveButton title="Save" width={wp(80)} />
+          </TouchableOpacity>
         </View>
       </View>
     </MainLyout>

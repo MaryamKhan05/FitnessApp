@@ -21,10 +21,15 @@ const Equiments = () => {
   const [equipmentArray, setEquipmentArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
   const [loading, setLoading] = useState(false);
-  
 
   const saveToAsyncHandler = async () => {
     setLoading(true);
+    try {
+      await AsyncStorage.setItem("eFlag", "true");
+      console.log("saved flag to storage");
+    } catch (e) {
+      console.log("error saving equipment flag to storage", e);
+    }
     try {
       await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
       navigation.navigate("TabNav");
@@ -74,17 +79,16 @@ const Equiments = () => {
 
   return (
     <MainLyout heading="Equipment">
-      <View style={{alignItems:'center',flex:1}}>
-
-      <FlatList
-        data={equipments}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-      />
-      <TouchableOpacity onPress={saveToAsyncHandler} >
-        <ActiveButton title="Done" onPress="" />
-      </TouchableOpacity>
+      <View style={{ alignItems: "center", flex: 1 }}>
+        <FlatList
+          data={equipments}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+        />
+        <TouchableOpacity onPress={saveToAsyncHandler}>
+          <ActiveButton title="Done" onPress="" />
+        </TouchableOpacity>
       </View>
 
       <Modal visible={loading} animationType="fade" transparent={true}>
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 10,
     alignItems: "center",
-    width: '43%',
+    width: "43%",
     height: 145,
     margin: 10,
     justifyContent: "center",
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     backgroundColor: "white",
-    alignSelf:'center'
+    alignSelf: "center",
   },
   iconContainer: {
     shadowColor: "#B2B2B2",

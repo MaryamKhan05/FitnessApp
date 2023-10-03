@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  Linking,
 } from "react-native";
 
 import Entypo from "react-native-vector-icons/Entypo";
@@ -21,6 +22,7 @@ import { ActiveButton, Divider, ProfileCard } from "../components/INDEX";
 import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const size = 25;
 const color = "#B1B1B1";
 const starSize = 40,
@@ -35,6 +37,37 @@ const Profile = () => {
   const [star5, setStar5] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [upgradeModal, setUpgradeModal] = useState(false);
+  const [name, setName] = useState();
+
+  useEffect(() => {
+    getNameHandler();
+  }, []);
+  const getNameHandler = async () => {
+    try {
+      let n = await AsyncStorage.getItem("Name");
+      setName(n);
+    } catch (e) {
+      console.log("Error getting name from the storage", e);
+    }
+  };
+  const sendEmail = () => {
+    const email = "myselfmaryamkhan@gmail.com";
+    const subject = "Hello";
+    const body = "This is the body of the email.";
+
+    // Combine the email, subject, and body into a mailto URL
+    const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    // Use Linking to open the email app
+    Linking.openURL(mailtoUrl)
+      .then(() => {
+        console.log("Email app opened successfully");
+      })
+      .catch((error) => {
+        console.error("Error opening email app: ", error);
+      });
+  };
+
   return (
     <MainLyout heading="My Profile">
       <View style={styles.card}>
@@ -63,9 +96,7 @@ const Profile = () => {
             style={{ height: 70, width: 70 }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
-          Maryam Khan
-        </Text>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>{name}</Text>
       </View>
       <ProfileCard text="Personal Information" onPress="ProfileInfo">
         <FontAwesome
@@ -78,14 +109,7 @@ const Profile = () => {
       <ProfileCard text="Update Password" onPress="UpdatePassword">
         <Feather name="lock" size={size} color={color} style={styles.icon} />
       </ProfileCard>
-      <ProfileCard text="Update Premium" onPress="">
-        <FontAwesome
-          name="diamond"
-          size={20}
-          color={color}
-          style={styles.icon}
-        />
-      </ProfileCard>
+
       <TouchableOpacity
         style={{
           backgroundColor: colors.white,
@@ -148,16 +172,9 @@ const Profile = () => {
           resizeMode="contain"
         />
       </ProfileCard>
-      <ProfileCard text="Logout" onPress="Login">
-        <MaterialIcons
-          name="logout"
-          size={size}
-          color={color}
-          style={styles.icon}
-        />
-      </ProfileCard>
-      <Divider backgroundColor="#B2B2B2" />
-      <ProfileCard text="Terms of Services" onPress="Terms">
+
+      {/* <Divider backgroundColor="#B2B2B2" /> */}
+      {/* <ProfileCard text="Terms of Services" onPress="Terms">
         <MaterialCommunityIcons
           name="shield-account-outline"
           size={size}
@@ -172,7 +189,7 @@ const Profile = () => {
           color={color}
           style={styles.icon}
         />
-      </ProfileCard>
+      </ProfileCard> */}
 
       <TouchableOpacity
         style={{
@@ -227,6 +244,16 @@ const Profile = () => {
           </View>
         </View>
       </TouchableOpacity>
+
+      <ProfileCard text="Logout" onPress="Login">
+        <MaterialIcons
+          name="logout"
+          size={size}
+          color={color}
+          style={styles.icon}
+        />
+      </ProfileCard>
+
       {/* rate us modal */}
       <View style={{ alignItems: "center", flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -342,7 +369,9 @@ const Profile = () => {
               <Text style={styles.text}>Tap a star to rate</Text>
               <View style={{ marginVertical: 10, marginTop: 20 }}>
                 {star1 && star2 && star3 && star4 && star5 ? (
-                  <ActiveButton title="Rate Now" />
+                  <TouchableOpacity>
+                    <ActiveButton title="Rate Now" />
+                  </TouchableOpacity>
                 ) : (
                   <View>
                     <Text style={styles.feedback}>Feedback</Text>
@@ -353,7 +382,9 @@ const Profile = () => {
                       numberOfLines={20}
                       multiline={true}
                     />
-                    <ActiveButton title="Send" />
+                    <TouchableOpacity onPress={sendEmail}>
+                      <ActiveButton title="Send" />
+                    </TouchableOpacity>
                   </View>
                 )}
               </View>
