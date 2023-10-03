@@ -98,6 +98,7 @@ const Exercises = () => {
 
   useEffect(() => {
     if (data && group && equipment) {
+      console.log("equipments", equipment);
       const filteredExercises = Object.values(data?.exercises).filter(
         (exercise) => group.includes(exercise.id)
       );
@@ -115,7 +116,7 @@ const Exercises = () => {
   useEffect(() => {
     if (finalArray) {
       if (!calledOnce) {
-        // console.log("hhehyeyey000000", finalArray);
+        console.log("hhehyeyey000000");
 
         shuffleArray(finalArray);
         // setCalledOnce(true);
@@ -128,27 +129,61 @@ const Exercises = () => {
     }
   }, [finalArray]);
 
-  useEffect(() => {
-    if (currentExerciseIndex) {
-      setExName(shuffledArray[currentExerciseIndex]?.name);
-      setGif(shuffledArray[currentExerciseIndex]?.asset);
-    }
-  }, [currentExerciseIndex]);
+  // useEffect(() => {
+  //   if (currentExerciseIndex) {
+  //     setExName(shuffledArray[currentExerciseIndex]?.name);
+  //     setGif(shuffledArray[currentExerciseIndex]?.asset);
+  //   }
+  // }, [currentExerciseIndex]);
 
   const nextHandler = () => {
-    console.log("shuffle ", shuffledArray.length);
-    console.log("shuffle 1", shuffledArray[1]?.name);
-    console.log("shuffle 0", shuffledArray[0]?.name);
-    console.log("shuffle 2", shuffledArray[2]?.name);
-    console.log("iiiiiiippp", currentExerciseIndex);
+    // console.log("shuffle ", shuffledArray.length);
+    // console.log("shuffle 0", shuffledArray[0]?.name);
+    // console.log("shuffle 1", shuffledArray[1]?.name);
+    // console.log("shuffle 2", shuffledArray[2]?.name);
+    // console.log("iiiiiiippp", currentExerciseIndex);
     if (currentExerciseIndex < shuffledArray.length - 1) {
-      console.log("iiiiiiioooo", currentExerciseIndex);
+      // console.log("iiiiiiioooo", currentExerciseIndex);
       setCurrentExerciseIndex(currentExerciseIndex + 1);
 
-      if (shuffledArray[currentExerciseIndex]?.variations) {
-        console.log("jjjj",shuffledArray[currentExerciseIndex]);
-        shuffleArray(shuffledArray[currentExerciseIndex]);
+      // new code
+      console.log(
+        "variation????",
+        shuffledArray[currentExerciseIndex]?.variations
+      );
+      if (shuffledArray[currentExerciseIndex]?.variations?.available == true) {
+        console.log("llssbsbsb");
+        const variations = shuffledArray[currentExerciseIndex]?.variations;
+        const numberOfVariations = Object.keys(variations).length;
+        const randomIndex = Math.floor(Math.random() * numberOfVariations);
+        console.log("random index", randomIndex);
+        if (randomIndex !== 0) {
+          console.log("-------------random!==0");
+          const variationIds = Object.keys(variations);
+          const selectedVariationId = variationIds[randomIndex];
+          console.log(
+            "selectedVariationId",
+            variations[selectedVariationId].name
+          );
+          const requiredEquipment =
+            variations[selectedVariationId]?.equipmentRequired;
+          console.log("requiredEquipment", requiredEquipment);
+
+          const containsMatchingEquipment = requiredEquipment?.some(
+            (equipmentItem) => equipment.includes(equipmentItem)
+          );
+          console.log("containsMatchingEquipment", containsMatchingEquipment);
+          if (containsMatchingEquipment) {
+            setExName(variations[selectedVariationId]?.name);
+            setGif(variations[selectedVariationId]?.asset);
+          } else {
+            console.log("ooejej");
+            setExName(shuffledArray[currentExerciseIndex].name);
+            setGif(shuffledArray[currentExerciseIndex].asset);
+          }
+        }
       } else {
+        console.log("00202002");
         setExName(shuffledArray[currentExerciseIndex].name);
         setGif(shuffledArray[currentExerciseIndex].asset);
       }
@@ -337,9 +372,6 @@ const Exercises = () => {
   const shuffleAndShowExercise = () => {
     setSet(1);
     setCount(0);
-    // setRestTimer(5)
-    // console.log("final array", finalArray);
-    // console.log("randm", randomExercise);
     if (randomExercise?.variations?.available == true) {
       const variations = randomExercise?.variations;
       const numberOfVariations = Object.keys(variations).length;
@@ -357,16 +389,6 @@ const Exercises = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (set) {
-  //     console.log(set, "set is");
-  //   }
-  //   if (set == 3) {
-  //     setTimeout(() => {
-  //       setText("Next Exercise");
-  //     }, 10000);
-  //   }
-  // }, [set]);
   const texthandler = () => {
     if (set < 3) {
       if (text == "Start Exercise") {
@@ -377,7 +399,6 @@ const Exercises = () => {
       } else if (text == "Rest") {
         setRestTimer(true);
         setRest(90);
-        // setSecondsRemaining(5);
         setText("Next Set");
         setTimer(false);
       } else if (text == "Next Set") {
@@ -385,6 +406,7 @@ const Exercises = () => {
         setText("Rest");
         setSecondsRemaining(60);
         setSet(set + 1);
+        setRest(false);
       }
     } else if (text == "Next Exercise") {
       setText("Start Exercise");
@@ -392,11 +414,9 @@ const Exercises = () => {
       setRest(false);
       setSecondsRemaining(60);
       setTimer(false);
-      // shuffleAndShowExercise();
       nextHandler();
     } else {
       setText("Next Exercise");
-      // shuffleAndShowExercise();
       setSet(1);
       setRest(false);
       shuffleAndShowExercise();
@@ -471,22 +491,29 @@ const Exercises = () => {
               style={{ height: 25, width: 25 }}
               resizeMode="contain"
             />
-            {startTimer && (
+            {startTimer ? (
               <Text style={styles.time}>{`${String(minutes).padStart(
                 2,
                 "0"
               )} ${String(seconds).padStart(2, "0")}`}</Text>
-            )}
-
-            {restTimer && (
+            ) : restTimer ? (
               <Text style={styles.time}>{`${String(restMin).padStart(
                 2,
                 "0"
               )} ${String(restSec).padStart(2, "0")}`}</Text>
-            )}
-            {!startTimer && !restTimer && (
+            ) : (
               <Text style={styles.time}>01 00</Text>
             )}
+
+            {/* {restTimer && (
+              <Text style={styles.time}>{`${String(restMin).padStart(
+                2,
+                "0"
+              )} ${String(restSec).padStart(2, "0")}`}</Text>
+            )} */}
+            {/* {!startTimer && !restTimer && (
+              <Text style={styles.time}>01 00</Text>
+            )} */}
           </View>
         </View>
         <View style={{ marginTop: "10%" }}>
