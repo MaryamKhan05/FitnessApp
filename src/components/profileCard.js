@@ -10,13 +10,35 @@ import Entypo from "react-native-vector-icons/Entypo";
 
 import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileCard = (props) => {
   const navigation = useNavigation();
+  const deleteEquipmentHandler = async () => {
+    try {
+      const d = await AsyncStorage.removeItem("Equipments");
+      // console.log("equipments deleted!");
+    } catch (e) {
+      console.log("error deleting equipments", e);
+    }
+  };
+
+  const handleSignout = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login");
+      })
+      .catch((error) => alert(error.message));
+  };
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate(props.onPress)}
+      onPress={() => [
+        props.text=="Logout"? handleSignout:null ,
+        props.onPress == "Equiments" ? deleteEquipmentHandler() : null,
+        navigation.navigate(props.onPress),
+      ]}
     >
       <View style={{ width: "15%", alignItems: "center" }}>
         {props.children}

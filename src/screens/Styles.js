@@ -1,13 +1,17 @@
 import { StyleSheet } from "react-native";
 import colors from "../../assets/colors/colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 export default styles = StyleSheet.create({
   input: {
     backgroundColor: colors.white,
     alignSelf: "center",
-    width: 343,
+    width: wp(92),
     height: 52,
     borderRadius: 8,
-    padding: 10,
+    // padding: 10,
     margin: 7,
     fontSize: 14,
     fontFamily: "PoppinsRegular",
@@ -37,7 +41,7 @@ export default styles = StyleSheet.create({
     margin: 10,
   },
   buttonTop: {
-    marginTop: "15%",
+    marginTop: hp(15),
   },
   homeImage: {
     height: 80,
@@ -74,5 +78,10 @@ export default styles = StyleSheet.create({
     width: 173,
     padding: 10,
     color:'#666666'
+  },
+  authInput:{
+    width: hp(35),
+    padding: 10,
+    borderRadius: 10,
   }
 });

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Swiper from "react-native-swiper";
 import colors from "../../assets/colors/colors";
-import { Slider } from "../components/INDEX";
+import { ActiveButton, Slider } from "../components/INDEX";
 import { useNavigation } from "@react-navigation/native";
 
 const Onboarding = () => {
   const swiperRef = React.createRef();
   const navigation = useNavigation();
   const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    setTimeout(() => {
-      if (currentIndex == 2) {
-        navigation.navigate("Login");
-      }
-    }, 2000);
-  }, [currentIndex]);
+
   return (
     <View
       style={{
@@ -26,7 +23,7 @@ const Onboarding = () => {
         backgroundColor: "white",
       }}
     >
-      <View style={{ justifyContent: "center", height: "70%" }}>
+      <View style={{ justifyContent: "center", height: "60%" }}>
         <Swiper
           ref={swiperRef}
           loop={false}
@@ -37,11 +34,13 @@ const Onboarding = () => {
             height: 6,
             borderRadius: 76,
             width: 16,
+            marginTop: "-20%",
           }}
           dotStyle={{
             height: 5,
             borderRadius: 76,
             width: 12,
+            marginTop: "-20%",
           }}
           // dotColor="#001E6C"
         >
@@ -64,6 +63,14 @@ const Onboarding = () => {
           />
         </Swiper>
       </View>
+      {currentIndex == 2 && (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
+          style={{ position: "absolute", bottom: hp(10) }}
+        >
+          <ActiveButton title="Let's Go" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

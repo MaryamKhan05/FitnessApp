@@ -11,7 +11,7 @@ const Slider = (props) => {
     >
       <Image
         source={props.image}
-        style={{ height: 266, width: 293 }}
+        style={{ height: 200, width: 293 }}
         resizeMode="contain"
       />
       <View style={{ flexDirection: "row" }}>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#001E6C",
     fontSize: 18,
-    marginTop: "30%",
+    marginTop: "20%",
   },
 });
 

@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { ActiveButton } from "../components/INDEX";
 import colors from "../../assets/colors/colors";
+
 import { StatusBar } from "expo-status-bar";
 
 const RegLayout = (props) => {
@@ -18,18 +20,19 @@ const RegLayout = (props) => {
       style={{ flex: 1, zIndex: -1 }}
     >
       <View style={styles.overlay}>
-        <View style={{ marginTop: "15%" }}>
-          <Text style={styles.heading}>Workout</Text>
-          <Text style={styles.flow}>Flow</Text>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            flex:1,
-          }}
-        >
-          {props.children}
-        </View>
+       
+          <View style={{ marginTop: "15%" }}>
+            <Text style={styles.heading}>Workout</Text>
+            <Text style={styles.flow}>Flow</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              flex: 1,
+            }}
+          >
+            {props.children}
+          </View>
       </View>
       <StatusBar style="light" />
     </ImageBackground>

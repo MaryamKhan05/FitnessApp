@@ -16,10 +16,12 @@ import {
   EditProfile,
   UpdatePassword,
   Equiments,
+  Completion,
 } from "../screens/INDEX";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import colors from "../../assets/colors/colors";
+import { NavigationContainer, useNavigation } from "@react-navigation/native"
 import { View } from "react-native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,7 +35,7 @@ function TabNav() {
         component={HomeStack}
         options={{
           headerShown: false,
-          title: "My Workout",
+          title: "Workout",
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="running" size={size} color={color} />
           ),
@@ -44,7 +46,7 @@ function TabNav() {
         component={Profile}
         options={{
           headerShown: false,
-          title: "My Profile",
+          title: "Profile",
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="user-circle" size={size} color={color} />
           ),
@@ -55,7 +57,7 @@ function TabNav() {
 }
 const HomeStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Equiments">
+    <Stack.Navigator >
       <Stack.Screen
         name="Home"
         component={Home}
@@ -67,11 +69,12 @@ const HomeStack = () => {
           ),
         }}
       />
-      <Stack.Screen
+       <Stack.Screen
         name="Equiments"
         component={Equiments}
         options={{ headerShown: false }}
       />
+     
       <Stack.Screen
         name="Terms"
         component={Terms}
@@ -108,6 +111,12 @@ const HomeStack = () => {
         component={UpdatePassword}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Completion"
+        component={Completion}
+        options={{ headerShown: false }}
+      />
+      
     </Stack.Navigator>
   );
 };

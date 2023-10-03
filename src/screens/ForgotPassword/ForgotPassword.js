@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 import RegLayout from "../../layouts/RegistrationLayout";
 import ForgotLayout from "../../layouts/ForgotPasswordLayout";
 import Styles from "../Styles";
@@ -14,9 +7,7 @@ import Styles from "../Styles";
 const ForgotPassword = () => {
   return (
     <RegLayout>
-      <View
-        style={{ justifyContent: "flex-end", flex: 1 }}
-      >
+      <View style={{ justifyContent: "flex-end", flex: 1 }}>
         <ForgotLayout
           heading="Forgot Password?"
           text="No worries, we'll send you reset instruction"

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "FitnessApp",
-    "slug": "FitnessApp",
+    "name": "Workout Flow",
+    "slug": "workoutFLow",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ferioLabs/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/ferioLabs/SplashScreen.png",
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/ferioLabs/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.maryam03.FitnessApp"
@@ -31,7 +31,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "3f9d4019-bfca-4d97-920b-e108faa3e0a7"
+        "projectId": "1ba8f3e3-205e-4143-942a-3e011b472a85"
       }
     }
   }

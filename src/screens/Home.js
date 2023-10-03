@@ -27,10 +27,13 @@ const Home = () => {
     try {
       if (upper) {
         await AsyncStorage.setItem("Category", "upperBody");
+        console.log("upper")
       } else if (lower) {
         await AsyncStorage.setItem("Category", "lowerBody");
+        console.log("lower")
       } else {
         await AsyncStorage.setItem("Category", "core");
+        console.log("core")
       }
       console.log("hehe saved");
       navigation.navigate("Exercises");

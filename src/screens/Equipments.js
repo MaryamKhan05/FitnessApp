@@ -21,12 +21,13 @@ const Equiments = () => {
   const [equipmentArray, setEquipmentArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
   const [loading, setLoading] = useState(false);
+  
 
   const saveToAsyncHandler = async () => {
     setLoading(true);
     try {
       await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
-      navigation.navigate("Home");
+      navigation.navigate("TabNav");
     } catch (e) {
       console.log("error saving equipments to storage");
     }
@@ -72,7 +73,7 @@ const Equiments = () => {
   };
 
   return (
-    <MainLyout heading="My Equipment">
+    <MainLyout heading="Equipment">
       <View style={{alignItems:'center',flex:1}}>
 
       <FlatList
@@ -81,7 +82,7 @@ const Equiments = () => {
         keyExtractor={(item) => item.id}
         numColumns={2}
       />
-      <TouchableOpacity onPress={saveToAsyncHandler}>
+      <TouchableOpacity onPress={saveToAsyncHandler} >
         <ActiveButton title="Done" onPress="" />
       </TouchableOpacity>
       </View>

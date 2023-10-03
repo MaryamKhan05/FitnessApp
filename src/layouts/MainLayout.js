@@ -8,6 +8,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 const MainLyout = (props) => {
   const navigation = useNavigation();
@@ -17,11 +21,12 @@ const MainLyout = (props) => {
         source={require("../../assets/ferioLabs/header.png")}
         style={{
           height: 140,
-          width: 400,
+          width:wp(100) ,
           alignSelf: "center",
           alignItems: "center",
           justifyContent: "center",
         }}
+        resizeMode="stretch"
       >
         <View
           style={{

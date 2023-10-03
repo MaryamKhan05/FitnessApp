@@ -34,6 +34,7 @@ const Profile = () => {
   const [star4, setStar4] = useState(false);
   const [star5, setStar5] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [upgradeModal, setUpgradeModal] = useState(false);
   return (
     <MainLyout heading="My Profile">
       <View style={styles.card}>
@@ -85,7 +86,60 @@ const Profile = () => {
           style={styles.icon}
         />
       </ProfileCard>
-      <ProfileCard text="Update Equipment" onPress="">
+      <TouchableOpacity
+        style={{
+          backgroundColor: colors.white,
+          padding: 20,
+          shadowColor: "black",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.09,
+          shadowRadius: 4,
+          elevation: 3,
+          width: "90%",
+          borderRadius: 10,
+          margin: 5,
+          paddingHorizontal: 15,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+        onPress={() => setUpgradeModal(true)}
+      >
+        <View style={{ width: "15%", alignItems: "center" }}>
+          <FontAwesome
+            name="diamond"
+            size={20}
+            color={color}
+            style={styles.icon}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              width: "80%",
+              fontFamily: "PoppinsRegular",
+              fontSize: 14,
+              color: "#4E2B4B",
+              textAlign: "left",
+              alignSelf: "center",
+            }}
+          >
+            Update Premium
+          </Text>
+          <View style={{}}>
+            <Entypo name="chevron-right" size={20} color="#B1B1B1" />
+          </View>
+        </View>
+      </TouchableOpacity>
+      <ProfileCard text="Update Equipment" onPress="Equiments">
         <MaterialCommunityIcons
           name="dumbbell"
           size={size}
@@ -173,7 +227,7 @@ const Profile = () => {
           </View>
         </View>
       </TouchableOpacity>
-
+      {/* rate us modal */}
       <View style={{ alignItems: "center", flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View
@@ -310,6 +364,69 @@ const Profile = () => {
           </View>
         </Modal>
       </View>
+
+      {/* upgrade modal */}
+      <View style={{ alignItems: "center", flex: 1 }}>
+        <Modal animationType="slide" transparent={true} visible={upgradeModal}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "flex-end",
+              backgroundColor: "#00000099",
+              flex: 1,
+            }}
+          >
+            <View style={styles.modalView}>
+              <Image
+                source={require("../../assets/ferioLabs/Premium.png")}
+                style={{
+                  height: "44%",
+                  width: "44%",
+                  alignSelf: "center",
+                  marginTop: 20,
+                }}
+                resizeMode="contain"
+              />
+              <Text style={styles.rateus}>Unlock More Features</Text>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginVertical: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "PoppinsBold",
+                    fontSize: 43,
+                    color: "#E8A243",
+                  }}
+                >
+                  $10
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "PoppinsRrgular",
+                    fontSize: 14,
+                    color: "#E8A243",
+                  }}
+                >
+                  {" "}
+                  Per Month
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <ActiveButton title="Upgrade" width="70%" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setUpgradeModal(false)}>
+                <Text style={styles.underlinedText}>Details</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </MainLyout>
   );
 };
@@ -381,11 +498,11 @@ const styles = StyleSheet.create({
     width: 326,
     alignSelf: "center",
     paddingHorizontal: 10,
-    fontFamily:'PoppinsRegular',
-    borderRadius:6,
-    marginBottom:10,
-    padding:10,
-    height:85
+    fontFamily: "PoppinsRegular",
+    borderRadius: 6,
+    marginBottom: 10,
+    padding: 10,
+    height: 85,
   },
 });
 
