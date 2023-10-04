@@ -52,9 +52,10 @@ const Signup = () => {
   }, []);
 
   const getFlagHandler = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const f = await AsyncStorage.getItem("eFlag");
+      console.log(f,'f')
       if (f) {
         setFlag(true);
         setLoading(false);
@@ -63,6 +64,7 @@ const Signup = () => {
       }
     } catch (e) {
       console.log("errro getting flag from storage", e);
+      setLoading(true);
     }
   };
 

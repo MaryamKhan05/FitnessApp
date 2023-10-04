@@ -88,7 +88,7 @@ const Signin = () => {
         scrollEnabled={true}
       >
         <View style={{ marginTop: hp(10) }}>
-          <Text style={Styles.regTopText}>Signin</Text>
+          <Text style={Styles.regTopText}>Sign In</Text>
           <TextInput
             placeholder="Email"
             style={[Styles.input, { padding: 10 }]}

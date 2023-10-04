@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import Styles from "./Styles";
 import ActiveButton from "../components/activeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { updatePassword } from "../firebase/firebase";
+import { updateEmailFunction, updatePassword } from "../firebase/firebase";
 import { auth } from "../FirebaseConfig";
 const EditProfile = () => {
   const [name, setName] = useState();
@@ -116,6 +116,7 @@ const EditProfile = () => {
             placeholder={name}
             placeholderTextColor={"#666666"}
             onChangeText={(text) => setNewName(text)}
+            autoCapitalize="none"
           />
         </View>
         <View
@@ -132,10 +133,11 @@ const EditProfile = () => {
             placeholder={auth.currentUser.email}
             placeholderTextColor={"#666666"}
             onChangeText={(text) => setNewEmail(text)}
+            autoCapitalize="none"
           />
         </View>
         <View style={{ marginTop: 20 }}>
-          <TouchableOpacity onPress={{}}>
+          <TouchableOpacity onPress={() => updateEmailFunction('haseeb123', newEmail)}>
             <ActiveButton title="Save" width={wp(80)} />
           </TouchableOpacity>
         </View>

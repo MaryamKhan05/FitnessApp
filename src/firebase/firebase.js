@@ -1,5 +1,11 @@
 import { auth } from "../FirebaseConfig";
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  updateEmail,
+  sendEmailVerification,
+} from "firebase/auth";
 
 const reauthenticate = (currentPassword) => {
   const user = auth.currentUser;
@@ -23,3 +29,32 @@ export const updatePass = (currentPassword, newPassword) => {
       alert("Error updating password: " + error.message);
     });
 };
+
+export const updateEmailFunction =  (newEmail) => {
+  const user = auth.currentUser;
+  console.log(newEmail,user)
+  return updateEmail(user, newEmail)
+    .then(() => {
+      console.log("Email updated successfully");
+      alert("Email updated successfully");
+    })
+    .catch((error) => {
+      console.error("Error updating email:", error);
+      alert("Error updating email: " + error.message);
+    });
+};
+
+// export const updateEmailFunction = (newEmail) => {
+//   const user = auth.currentUser;
+
+//   // Send a verification email to the new email address
+//   sendEmailVerification(user)
+//     .then(() => {
+//       console.log("Verification email sent to the new email address");
+//       alert("Verification email sent to the new email address");
+//     })
+//     .catch((error) => {
+//       console.error("Error sending verification email:", error);
+//       alert("Error sending verification email: " + error.message);
+//     });
+// };
