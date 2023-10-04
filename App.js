@@ -33,6 +33,7 @@ export default function App() {
   const [startTime, setStartTime] = useState(null);
   const [sec, setSec] = useState(0);
   const [count, setCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     if (appState.current == "active") {
@@ -49,31 +50,44 @@ export default function App() {
     }
   }, [appState.current, sec]);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === "active"
-      ) {
-        console.log("App has come to the foreground!");
-      }
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (
+  //       appState.current.match(/inactive|background/) &&
+  //       nextAppState === "active"
+  //     ) {
+  //       console.log("App has come to the foreground!");
+  //     }
 
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-      console.log("AppState", appState.current);
-    });
+  //     appState.current = nextAppState;
+  //     setAppStateVisible(appState.current);
+  //     console.log("AppState", appState.current);
+  //   });
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   if (!fontsLoaded) {
     return null;
   }
+  // useEffect(() => {
+  //   getTokenHandler();
+  // }, []);
+
+  // const getTokenHandler = async () => {
+  //   try {
+  //     await AsyncStorage.getItem("token");
+  //   } catch (e) {
+  //     console.log("error getting token", e);
+  //   }
+  //   setLoggedIn(true);
+  // };
   return (
-    <View style={{ flex: 1}}>
-      <AppNav/>
+    <View style={{ flex: 1 }}>
+      {/* {loggedIn ? <TabNav /> : <AppNav />} */}
+       <AppNav />
       {/* <Text>Current state is: {appStateVisible}</Text>
       <Text>seconds {sec}</Text> */}
       {/* <Onboarding/> */}

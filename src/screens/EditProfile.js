@@ -48,20 +48,15 @@ const EditProfile = () => {
       console.log("Error getting email from the storage", e);
     }
   };
-  // const saveNewInfoHandler = async () => {
-  //   try {
-  //     await AsyncStorage.setItem("Name", newName);
-  //     console.log("new name saved");
-  //   } catch (e) {
-  //     console.log("Error saving new name ", e);
-  //   }
-  //   try {
-  //     await AsyncStorage.setItem("Email", newEmail);
-  //     console.log("new email saved");
-  //   } catch (e) {
-  //     console.log("Error saving new email  ", e);
-  //   }
-  // };
+  const saveNewInfoHandler = async () => {
+    try {
+      await AsyncStorage.setItem("Name", newName);
+      console.log("new name saved");
+    } catch (e) {
+      console.log("Error saving new name ", e);
+    }
+   
+  };
 
   return (
     <MainLyout heading="Personal Information">
@@ -134,10 +129,13 @@ const EditProfile = () => {
             placeholderTextColor={"#666666"}
             onChangeText={(text) => setNewEmail(text)}
             autoCapitalize="none"
+            editable={false}
           />
         </View>
         <View style={{ marginTop: 20 }}>
-          <TouchableOpacity onPress={() => updateEmailFunction('haseeb123', newEmail)}>
+          <TouchableOpacity
+            onPress={saveNewInfoHandler}
+          >
             <ActiveButton title="Save" width={wp(80)} />
           </TouchableOpacity>
         </View>

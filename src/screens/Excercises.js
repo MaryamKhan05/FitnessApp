@@ -51,6 +51,7 @@ const Exercises = () => {
   let exerciseArray = [];
   const [exName, setExName] = useState();
   const [gif, setGif] = useState();
+  const [startButton, setStartButton] = useState(true);
 
   // get the day
 
@@ -80,29 +81,39 @@ const Exercises = () => {
 
     const equi = await AsyncStorage.getItem("Equipments");
     const e = JSON.parse(equi);
+    // console.log(e, "eeeee");
     setEquipment(e);
   };
 
   useEffect(() => {
     if (day && category) {
-      const data = workout[category] || workout.core;
-      setData(data);
+      if (equipment.length > 0) {
+        // console.log("hhshhshhsh", equipment);
+        const data = workout[category] || workout.core;
+        setData(data);
 
-      const grp =
-        day === "Monday" || day === "Wednesday" || day === "Friday"
-          ? data?.groups[1]?.ex
-          : data?.groups[2]?.ex;
-      setGroup(grp);
+        const grp =
+          day === "Monday" || day === "Wednesday" || day === "Friday"
+            ? data?.groups[1]?.ex
+            : data?.groups[2]?.ex;
+        setGroup(grp);
+      } else {
+        const data = workout[category] || workout.core;
+        setData(data);
+
+        // console.log("lkgffcvb", data);
+      }
     }
   }, [day, category]);
 
   useEffect(() => {
-    if (data && group && equipment) {
-      console.log("equipments", equipment);
+    if (data && group && equipment.length > 0) {
+      console.log("uuuuu");
+      // console.log("equipments", equipment);
       const filteredExercises = Object.values(data?.exercises).filter(
         (exercise) => group.includes(exercise.id)
       );
-      // console.log("filteredExercises",filteredExercises?.equipmentOptions)
+      // console.log("filtered", filteredExercises);
       const finalArray = filteredExercises?.filter((exercise) =>
         exercise.equipmentRequired?.some((equipmentType) =>
           equipment.includes(equipmentType)
@@ -113,16 +124,42 @@ const Exercises = () => {
     }
   }, [group, equipment]);
 
+  // new code when there is no equipment
+  useEffect(() => {
+    if (data && equipment.length === 0) {
+      let group = [...data?.groups[1]?.ex, ...data?.groups[2]?.ex];
+      setGroup(group);
+      const finalArray = Object.values(data?.exercises).filter(
+        (exercise) =>
+          group.includes(exercise.id) &&
+          exercise.equipmentRequired.some(
+            (equipmentType) => equipmentType === ""
+          )
+      );
+      console.log("finalArray is", finalArray);
+      // console.log("exercise.equipmentRequired",exercise?.equipmentRequired)
+      if (finalArray.length === 0) {
+        console.log("No Exercises To Show");
+        setStartButton(false);
+      }
+      setFinalArray(finalArray);
+    }
+  }, [equipment]);
+
   useEffect(() => {
     if (finalArray) {
       if (!calledOnce) {
-        console.log("hhehyeyey000000");
+        console.log("hhehyeyey", finalArray[0]?.name);
+        console.log("array before", finalArray.length);
+        for (let i = finalArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [finalArray[i], finalArray[j]] = [finalArray[j], finalArray[i]];
+        }
 
-        shuffleArray(finalArray);
-        // setCalledOnce(true);
-        exerciseArray = finalArray;
-        console.log("apppllee", exerciseArray[currentExerciseIndex]?.name);
-        console.log("kkk", finalArray.length);
+        console.log("array afetr", finalArray.length);
+        setShuffledArray(finalArray);
+        setExName(finalArray[currentExerciseIndex]?.name);
+        setGif(finalArray[currentExerciseIndex]?.asset);
       }
     } else {
       Alert.alert("No matching exercises found.");
@@ -559,10 +596,13 @@ const Exercises = () => {
             </TouchableOpacity>
           )} */}
         </View>
-
-        <TouchableOpacity onPress={texthandler}>
+        {startButton ? (
+          <TouchableOpacity onPress={texthandler}>
+            <ActiveButton title={text} width="70%" />
+          </TouchableOpacity>
+        ) : (
           <ActiveButton title={text} width="70%" />
-        </TouchableOpacity>
+        )}
 
         {/* button */}
       </Card>

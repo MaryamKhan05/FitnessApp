@@ -6,7 +6,7 @@ import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { auth } from "../FirebaseConfig";
 const PersonalInfo = () => {
   const navigation = useNavigation();
   const [name, setName] = useState();
@@ -100,7 +100,9 @@ const PersonalInfo = () => {
           }}
         >
           <Text style={styles.text}>Email:</Text>
-          <Text style={[styles.text, styles.details]}>{email}</Text>
+          <Text style={[styles.text, styles.details]}>
+            {auth.currentUser.email}
+          </Text>
         </View>
       </View>
     </MainLyout>

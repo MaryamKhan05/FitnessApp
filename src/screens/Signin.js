@@ -41,16 +41,13 @@ const Signin = () => {
 
   useEffect(() => {
     if (token) {
-      setLoading(true);
       saveTokenHandler();
-      setLoading(false);
     }
   }, [token]);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.navigate("TabNav");
-        setLoading(false);
       }
     });
     return unsubscribe;
@@ -62,10 +59,9 @@ const Signin = () => {
     } catch (e) {
       console.log("error saving token after login", e);
     }
-    setLoading(false);
   };
   const handleSignIn = () => {
-    setLoading(true);
+    console.log("kkk");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setToken(userCredential._tokenResponse.idToken);
@@ -78,7 +74,7 @@ const Signin = () => {
       });
     setLoading(false);
   };
-
+  
   return (
     <RegLayout>
       <KeyboardAwareScrollView
@@ -134,7 +130,7 @@ const Signin = () => {
           </TouchableOpacity>
         </View>
         <View style={Styles.buttonTop}>
-          <TouchableOpacity onPress={handleSignIn}>
+          <TouchableOpacity onPress={()=> [handleSignIn(),setLoading(true)]}>
             <ActiveButton title="Sign In" />
           </TouchableOpacity>
           <Divider />
