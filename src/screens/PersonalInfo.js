@@ -6,32 +6,41 @@ import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { auth } from "../FirebaseConfig";
+import { auth, db } from "../FirebaseConfig";
+import { getDoc, doc } from "firebase/firestore";
 const PersonalInfo = () => {
   const navigation = useNavigation();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
+  const [userName, setUsername] = useState();
 
   useEffect(() => {
-    getNameHandler();
-    getMailHandler();
+    getUsername();
   }, []);
-  const getNameHandler = async () => {
+
+  const getUsername = async () => {
+    // const userId = auth.currentUser.uid; // Replace with the actual UID
+    // Fetch the user's data from Firestore
+    const id= await AsyncStorage.getItem("userId")
+    console.log("iddddd", id)
+    const userDocRef = doc(db, "users", id);
+
     try {
-      let n = await AsyncStorage.getItem("Name");
-      setName(n);
-    } catch (e) {
-      console.log("Error getting name from the storage", e);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const userName = userData.username; // Extract the username
+        console.log("User's Name:", userName);
+        setUsername(userName);
+        // Now you have the user's name, and you can use it as needed on this screen.
+      } else {
+        console.log("User document does not exist.");
+      }
+    } catch (error) {
+      console.error("Error getting user document:", error);
     }
   };
-  const getMailHandler = async () => {
-    try {
-      let n = await AsyncStorage.getItem("Email");
-      setEmail(n);
-    } catch (e) {
-      console.log("Error getting email from the storage", e);
-    }
-  };
+
   return (
     <MainLyout heading="Personal Information">
       <View style={styles.card}>
@@ -78,7 +87,9 @@ const PersonalInfo = () => {
             style={{ height: 70, width: 70, alignSelf: "center" }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>{name}</Text>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
+          {userName}
+        </Text>
         <View style={styles.divider} />
         <View
           style={{
@@ -89,7 +100,7 @@ const PersonalInfo = () => {
           }}
         >
           <Text style={styles.text}>Username:</Text>
-          <Text style={[styles.text, styles.details]}>{name}</Text>
+          <Text style={[styles.text, styles.details]}>{userName}</Text>
         </View>
         <View
           style={{
@@ -101,7 +112,7 @@ const PersonalInfo = () => {
         >
           <Text style={styles.text}>Email:</Text>
           <Text style={[styles.text, styles.details]}>
-            {auth.currentUser.email}
+            {auth.currentUser?.email}
           </Text>
         </View>
       </View>

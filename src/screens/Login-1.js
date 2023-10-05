@@ -23,7 +23,7 @@ const Login = () => {
     <RegLayout>
       <View
         style={{
-          marginTop: hp(15),
+         justifyContent:'flex-start', height:hp(50)
         }}
       >
         <Text style={Styles.regTopText}>Let's Get Started</Text>

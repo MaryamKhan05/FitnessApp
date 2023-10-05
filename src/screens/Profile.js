@@ -17,7 +17,8 @@ import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-
+import { auth, db } from "../FirebaseConfig";
+import { getDoc, doc } from "firebase/firestore";
 import { ActiveButton, Divider, ProfileCard } from "../components/INDEX";
 import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
@@ -38,18 +39,45 @@ const Profile = () => {
   const [feedback, setFeedback] = useState("");
   const [upgradeModal, setUpgradeModal] = useState(false);
   const [name, setName] = useState();
+  const [userName, setUsername] = useState();
 
   useEffect(() => {
-    getNameHandler();
+    getUsername();
   }, []);
-  const getNameHandler = async () => {
+
+  const getUsername = async () => {
+    const userId = auth.currentUser.uid; // Replace with the actual UID
+    console.log("auth.currentUser.uid", auth.currentUser.uid);
+    // Fetch the user's data from Firestore
+    const userDocRef = doc(db, "users", userId);
+
     try {
-      let n = await AsyncStorage.getItem("Name");
-      setName(n);
-    } catch (e) {
-      console.log("Error getting name from the storage", e);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const userName = userData.username; // Extract the username
+        console.log("User's Name::::::", userName);
+        setUsername(userName);
+        // Now you have the user's name, and you can use it as needed on this screen.
+      } else {
+        console.log("User document does not exist.");
+      }
+    } catch (error) {
+      console.error("Error getting user document:", error);
     }
   };
+
+  // useEffect(() => {
+  //   getNameHandler();
+  // }, []);
+  // const getNameHandler = async () => {
+  //   try {
+  //     let n = await AsyncStorage.getItem("Name");
+  //     setName(n);
+  //   } catch (e) {
+  //     console.log("Error getting name from the storage", e);
+  //   }
+  // };
   const sendEmail = () => {
     const email = "myselfmaryamkhan@gmail.com";
     const subject = "Hello";
@@ -96,7 +124,9 @@ const Profile = () => {
             style={{ height: 70, width: 70 }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>{name}</Text>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold", }}>
+          {userName}
+        </Text>
       </View>
       <ProfileCard text="Personal Information" onPress="ProfileInfo">
         <FontAwesome

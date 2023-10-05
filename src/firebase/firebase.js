@@ -5,7 +5,10 @@ import {
   updatePassword,
   updateEmail,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
+
+import { firebase } from "../FirebaseConfig";
 
 const reauthenticate = (currentPassword) => {
   const user = auth.currentUser;
@@ -30,19 +33,19 @@ export const updatePass = (currentPassword, newPassword) => {
     });
 };
 
-export const updateEmailFunction =  (newEmail) => {
-  const user = auth.currentUser;
-  console.log(newEmail,user)
-  return updateEmail(user, newEmail)
-    .then(() => {
-      console.log("Email updated successfully");
-      alert("Email updated successfully");
-    })
-    .catch((error) => {
-      console.error("Error updating email:", error);
-      alert("Error updating email: " + error.message);
-    });
-};
+// export const updateEmailFunction =  (newEmail) => {
+//   const user = auth.currentUser;
+//   console.log(newEmail,user)
+//   return updateEmail(user, newEmail)
+//     .then(() => {
+//       console.log("Email updated successfully");
+//       alert("Email updated successfully");
+//     })
+//     .catch((error) => {
+//       console.error("Error updating email:", error);
+//       alert("Error updating email: " + error.message);
+//     });
+// };
 
 // export const updateEmailFunction = (newEmail) => {
 //   const user = auth.currentUser;
@@ -58,3 +61,14 @@ export const updateEmailFunction =  (newEmail) => {
 //       alert("Error sending verification email: " + error.message);
 //     });
 // };
+
+export const handleResetPassword = async (email) => {
+  console.log(email, auth);
+  await sendPasswordResetEmail(auth, email)
+    .then(() => {
+      alert("Mail Sent To Your Email", email);
+    })
+    .catch((error) => {
+      alert("Error sending password reset email:", error);
+    });
+};

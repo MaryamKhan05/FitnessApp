@@ -55,11 +55,11 @@ const ForgotLayout = (props) => {
           </Text>
         ) : null}
 
-        <View>{props.children}</View>
-        <TouchableOpacity onPress={()=>navigation.navigate(props.flow)}>
-
-        <ActiveButton title={props.title}  />
-        </TouchableOpacity>
+        <View>
+          {props.children}
+        
+        </View>
+        
         <TouchableOpacity
           style={{
             flexDirection: "row",

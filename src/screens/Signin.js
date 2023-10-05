@@ -38,6 +38,7 @@ const Signin = () => {
   const navigation = useNavigation();
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState();
 
   useEffect(() => {
     if (token) {
@@ -45,8 +46,15 @@ const Signin = () => {
     }
   }, [token]);
   useEffect(() => {
+    if (userId) {
+      console.log('0000', userId)
+      saveUserIdHandler();
+    }
+  }, [userId]);
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        
         navigation.navigate("TabNav");
       }
     });
@@ -56,25 +64,36 @@ const Signin = () => {
   const saveTokenHandler = async () => {
     try {
       await AsyncStorage.setItem("token", token);
+      console.log("saved token")
     } catch (e) {
       console.log("error saving token after login", e);
     }
   };
-  const handleSignIn = () => {
-    console.log("kkk");
+  const saveUserIdHandler = async (id) => {
+    try {
+      await AsyncStorage.setItem("userId", id);
+      console.log("saved");
+    } catch (e) {
+      console.log("error saving id after login", e);
+    }
+  };
+  const handleSignIn = async() => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setToken(userCredential._tokenResponse.idToken);
+        console.log("userCredential._tokenResponse", userCredential.user.uid);
+        saveUserIdHandler(userCredential.user.uid)
         setLoading(false);
       })
       .catch((error) => {
         console.log("error", error);
         const errorMessage = error.message;
         alert(errorMessage);
+        setLoading(false);
       });
     setLoading(false);
   };
-  
+
   return (
     <RegLayout>
       <KeyboardAwareScrollView
@@ -130,7 +149,7 @@ const Signin = () => {
           </TouchableOpacity>
         </View>
         <View style={Styles.buttonTop}>
-          <TouchableOpacity onPress={()=> [handleSignIn(),setLoading(true)]}>
+          <TouchableOpacity onPress={() => [handleSignIn(), setLoading(true)]}>
             <ActiveButton title="Sign In" />
           </TouchableOpacity>
           <Divider />
@@ -165,3 +184,48 @@ const styles = StyleSheet.create({
 });
 
 export default Signin;
+
+// userCredential._tokenResponse UserCredentialImpl {
+//   "_tokenResponse": Object {
+//     "displayName": "",
+//     "email": "test6@gmail.com",
+//     "expiresIn": "3600",
+//     "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjlhNTE5MDc0NmU5M2JhZTI0OWIyYWE3YzJhYTRlMzA2M2UzNDFlYzciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vd29ya291dGZsb3ctZTQ0OGIiLCJhdWQiOiJ3b3Jrb3V0Zmxvdy1lNDQ4YiIsImF1dGhfdGltZSI6MTY5NjUwNDAyNSwidXNlcl9pZCI6ImJsUExYUGRoUGNRRnJLZnB4aFBwbXBlSzJpajEiLCJzdWIiOiJibFBMWFBkaFBjUUZyS2ZweGhQcG1wZUsyaWoxIiwiaWF0IjoxNjk2NTA0MDI1LCJleHAiOjE2OTY1MDc2MjUsImVtYWlsIjoidGVzdDZAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInRlc3Q2QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.kwchwMu1yuoXFofJH6_oAzAkRWBqTujU9s0uvCsLNymoTYFSWQIOtNqYvMMRk_Iu64KIVOeTh6wBPxmCJBZ2QlNOSyd9jyrnWShBJTte73VAuk0UfvmDtOAaQbtcvD25xWlrvZgw3meaBrxY36Pd5A2EFMtGIQfHqI_Cpnx45DcQNXgeoiu91O4SxEJ7YqrA88-onZUrQAmbWASpL4Az4n4I6tG-RAQb8yO6NysqGTpUjKfiQu4g1K0ucKsTJqeInq6DGG83jcGwQ1UZM2cuSjSmQyxZM1oK0p4H8RN6y8Itd7k4-Xu_hSAEllVM_XfRYmA5Ou0wlni_n2M2cZEb3g",
+//     "kind": "identitytoolkit#VerifyPasswordResponse",
+//     "localId": "blPLXPdhPcQFrKfpxhPpmpeK2ij1",
+//     "refreshToken": "AMf-vBwsE4hL7cGcmNJjsekor5Hz1aySmXDMECFFPjtk9QW7ltT-GVqg0tIed-RSHT49vr72ExqhJIIs1JusUOxeQLjDzPM7BerOq6hhksRYyj3m6d_JvJsnif-SoB4DmtB4Xr9TLgBocD7JcdDpK0T1GS3AT--Xf7JrjhbdKXSaMWyU0G7DzUJbS3CSSnKMz_MTjnJDHaJlpmO9t7KHj2ZXHAsVLHGW0g",
+//     "registered": true,
+//   },
+//   "operationType": "signIn",
+//   "providerId": null,
+//   "user": Object {
+//     "_redirectEventId": undefined,
+//     "apiKey": "AIzaSyBpNH7x9OcRZgfsn_jvM3frYGQPXrI3IJA",
+//     "appName": "[DEFAULT]",
+//     "createdAt": "1696502794713",
+//     "displayName": undefined,
+//     "email": "test6@gmail.com",
+//     "emailVerified": false,
+//     "isAnonymous": false,
+//     "lastLoginAt": "1696503965509",
+//     "phoneNumber": undefined,
+//     "photoURL": undefined,
+//     "providerData": Array [
+//       Object {
+//         "displayName": null,
+//         "email": "test6@gmail.com",
+//         "phoneNumber": null,
+//         "photoURL": null,
+//         "providerId": "password",
+//         "uid": "test6@gmail.com",
+//       },
+//     ],
+//     "stsTokenManager": Object {
+//       "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjlhNTE5MDc0NmU5M2JhZTI0OWIyYWE3YzJhYTRlMzA2M2UzNDFlYzciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vd29ya291dGZsb3ctZTQ0OGIiLCJhdWQiOiJ3b3Jrb3V0Zmxvdy1lNDQ4YiIsImF1dGhfdGltZSI6MTY5NjUwNDAyNSwidXNlcl9pZCI6ImJsUExYUGRoUGNRRnJLZnB4aFBwbXBlSzJpajEiLCJzdWIiOiJibFBMWFBkaFBjUUZyS2ZweGhQcG1wZUsyaWoxIiwiaWF0IjoxNjk2NTA0MDI1LCJleHAiOjE2OTY1MDc2MjUsImVtYWlsIjoidGVzdDZAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInRlc3Q2QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.kwchwMu1yuoXFofJH6_oAzAkRWBqTujU9s0uvCsLNymoTYFSWQIOtNqYvMMRk_Iu64KIVOeTh6wBPxmCJBZ2QlNOSyd9jyrnWShBJTte73VAuk0UfvmDtOAaQbtcvD25xWlrvZgw3meaBrxY36Pd5A2EFMtGIQfHqI_Cpnx45DcQNXgeoiu91O4SxEJ7YqrA88-onZUrQAmbWASpL4Az4n4I6tG-RAQb8yO6NysqGTpUjKfiQu4g1K0ucKsTJqeInq6DGG83jcGwQ1UZM2cuSjSmQyxZM1oK0p4H8RN6y8Itd7k4-Xu_hSAEllVM_XfRYmA5Ou0wlni_n2M2cZEb3g",
+//       "expirationTime": 1696507625045,
+//       "refreshToken": "AMf-vBwsE4hL7cGcmNJjsekor5Hz1aySmXDMECFFPjtk9QW7ltT-GVqg0tIed-RSHT49vr72ExqhJIIs1JusUOxeQLjDzPM7BerOq6hhksRYyj3m6d_JvJsnif-SoB4DmtB4Xr9TLgBocD7JcdDpK0T1GS3AT--Xf7JrjhbdKXSaMWyU0G7DzUJbS3CSSnKMz_MTjnJDHaJlpmO9t7KHj2ZXHAsVLHGW0g",
+//     },
+//     "tenantId": undefined,
+//     "uid": "blPLXPdhPcQFrKfpxhPpmpeK2ij1",
+//   },
+// }

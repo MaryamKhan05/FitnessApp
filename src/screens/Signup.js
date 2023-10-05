@@ -27,10 +27,14 @@ import RegLayout from "../layouts/RegistrationLayout";
 import colors from "../../assets/colors/colors";
 import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../FirebaseConfig";
+import { auth, db } from "../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {
+  getFirestore,
+  doc,
+  setDoc, // Import setDoc function
+} from "firebase/firestore";
 const Signup = () => {
   const size = 20;
   const color = "#B2B6B7";
@@ -46,6 +50,7 @@ const Signup = () => {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [flag, setFlag] = useState(false);
+  const [userId, setUserId] = useState();
 
   useEffect(() => {
     getFlagHandler();
@@ -55,7 +60,7 @@ const Signup = () => {
     // setLoading(true);
     try {
       const f = await AsyncStorage.getItem("eFlag");
-      console.log(f,'f')
+      console.log(f, "f");
       if (f) {
         setFlag(true);
         setLoading(false);
@@ -68,8 +73,18 @@ const Signup = () => {
     }
   };
 
+  const saveTokenHandler = async () => {
+    try {
+      await AsyncStorage.setItem("token", token);
+      // await AsyncStorage.setItem("userId", userId);
+    } catch (e) {
+      console.log("error saving token after signup", e);
+      console.log("error saving id after signup", e);
+    }
+  };
   useEffect(() => {
     if (token) {
+      saveTokenHandler();
       Alert.alert("Signed Up Successfully ! ");
       if (flag) {
         navigation.navigate("TabNav");
@@ -86,21 +101,19 @@ const Signup = () => {
       setLoading(true);
       if (password == confirmPassword) {
         setLoading(true);
-        try {
-          await AsyncStorage.setItem("Name", name);
-          console.log("Name saved to storage");
-        } catch (e) {
-          console.log("error saving name", e);
-        }
-        try {
-          await AsyncStorage.setItem("Email", email);
-          console.log("Email saved to storage");
-        } catch (e) {
-          console.log("error saving Email", e);
-        }
         createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
+          .then(async (userCredential) => {
+            const user = userCredential.user;
             setToken(userCredential._tokenResponse.idToken);
+            console.log("usid", userCredential._tokenResponse);
+            setUserId(userCredential.user.providerData.uid);
+            // Store the username in Firebase Realtime Database or Firestore
+            const username = name; // Replace with the actual username
+            const userId = user.uid; // The UID of the signed-up user
+
+            // Firebase Realtime Database example:
+            const userDocRef = doc(db, "users", userId);
+            await setDoc(userDocRef, { username });
             setLoading(false);
           })
           .catch((error) => {
