@@ -7,6 +7,8 @@ import {
   Image,
   TextInput,
   ImageBackground,
+  ActivityIndicator,
+  Modal
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -22,18 +24,22 @@ import ActiveButton from "../components/activeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateEmailFunction, updatePassword } from "../firebase/firebase";
 import { auth, db } from "../FirebaseConfig";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc,setDoc } from "firebase/firestore";
+
+
+
+
+
 const EditProfile = () => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [newName, setNewName] = useState();
   const [newEmail, setNewEmail] = useState();
+  const [loading,setLoading]=useState(false)
 
   const [userName, setUsername] = useState();
 
   const getUsername = async () => {
-    // const userId = auth.currentUser.uid; // Replace with the actual UID
-    // Fetch the user's data from Firestore
     const id = await AsyncStorage.getItem("userId");
     console.log("iddddd", id);
     const userDocRef = doc(db, "users", id);
@@ -54,11 +60,17 @@ const EditProfile = () => {
       console.error("Error getting user document:", error);
     }
   };
+
+
   useEffect(() => {
     getNameHandler();
     getMailHandler();
     getUsername();
   }, []);
+
+
+
+
   const getNameHandler = async () => {
     try {
       let n = await AsyncStorage.getItem("Name");
@@ -76,6 +88,10 @@ const EditProfile = () => {
       console.log("Error getting email from the storage", e);
     }
   };
+
+
+
+
   const saveNewInfoHandler = async () => {
     try {
       await AsyncStorage.setItem("Name", newName);
@@ -84,6 +100,27 @@ const EditProfile = () => {
       console.log("Error saving new name ", e);
     }
   };
+
+
+
+
+
+
+  const updateUsername = async () => {
+    setLoading(true)
+    const id = await AsyncStorage.getItem("userId"); // Get the user's UID from AsyncStorage
+    const userDocRef = doc(db, "users", id);
+  
+    try {
+      await setDoc(userDocRef, { username: newName }, { merge: true });
+      alert("Username updated successfully");
+      setLoading(false)
+    } catch (error) {
+      alert("Error updating username:", error);
+      setLoading(false)
+    }
+  };
+
 
   return (
     <MainLyout heading="Personal Information">
@@ -162,11 +199,24 @@ const EditProfile = () => {
           />
         </View>
         <View style={{ marginTop: 20 }}>
-          <TouchableOpacity onPress={saveNewInfoHandler}>
+          <TouchableOpacity onPress={updateUsername}>
             <ActiveButton title="Save" width={wp(80)} />
           </TouchableOpacity>
         </View>
       </View>
+
+      <Modal visible={loading} animationType="fade" transparent={true}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            backgroundColor: colors.overlay,
+          }}
+        >
+          <ActivityIndicator size={"large"} color={colors.primary} />
+        </View>
+      </Modal>
     </MainLyout>
   );
 };
