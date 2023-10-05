@@ -24,7 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 const Exercises = () => {
   const navigation = useNavigation();
   const [setNumber, setSetNumber] = useState(1);
-  const [secondsRemaining, setSecondsRemaining] = useState(60);
+  const [secondsRemaining, setSecondsRemaining] = useState(10);
   const [modalVisible, setModalVisible] = useState(false);
   const [day, setDay] = useState();
   const [category, setCategory] = useState([]);
@@ -37,7 +37,7 @@ const Exercises = () => {
   const [shuffledArray, setShuffledArray] = useState([]);
   const [count, setCount] = useState(0);
   const [startTimer, setTimer] = useState(false);
-  const [rest, setRest] = useState(90);
+  const [rest, setRest] = useState(15);
   const [restTimer, setRestTimer] = useState(false);
   const [set, setSet] = useState(1);
   const [soundChing, setSoundChing] = React.useState();
@@ -81,7 +81,7 @@ const Exercises = () => {
 
     const equi = await AsyncStorage.getItem("Equipments");
     const e = JSON.parse(equi);
-    // console.log(e, "eeeee");
+    console.log(e, "eeeee");
     setEquipment(e);
   };
 
@@ -91,12 +91,14 @@ const Exercises = () => {
         // console.log("hhshhshhsh", equipment);
         const data = workout[category] || workout.core;
         setData(data);
+        console.log("fata", data)
 
         const grp =
           day === "Monday" || day === "Wednesday" || day === "Friday"
             ? data?.groups[1]?.ex
             : data?.groups[2]?.ex;
         setGroup(grp);
+        console.log("grp", grp)
       } else {
         const data = workout[category] || workout.core;
         setData(data);
@@ -113,13 +115,13 @@ const Exercises = () => {
       const filteredExercises = Object.values(data?.exercises).filter(
         (exercise) => group.includes(exercise.id)
       );
-      // console.log("filtered", filteredExercises);
+      console.log("filtered", filteredExercises);
       const finalArray = filteredExercises?.filter((exercise) =>
         exercise.equipmentRequired?.some((equipmentType) =>
           equipment.includes(equipmentType)
         )
       );
-      // console.log("FINAL", finalArray);
+      console.log("FINAL", finalArray);
       setFinalArray(finalArray);
     }
   }, [group, equipment]);
@@ -307,7 +309,7 @@ const Exercises = () => {
         } else if (rest == 0) {
           setRestModal(false);
           setRestTimer(false);
-          setRest(90);
+          setRest(15);
         }
       }, 1000);
       return () => clearInterval(countdown);
@@ -431,17 +433,17 @@ const Exercises = () => {
       if (text == "Start Exercise") {
         setTimer(true);
         setText("Rest");
-        setSecondsRemaining(60);
+        setSecondsRemaining(10);
         setCount(count + 1);
       } else if (text == "Rest") {
         setRestTimer(true);
-        setRest(90);
+        setRest(15);
         setText("Next Set");
         setTimer(false);
       } else if (text == "Next Set") {
         setTimer(true);
         setText("Rest");
-        setSecondsRemaining(60);
+        setSecondsRemaining(10);
         setSet(set + 1);
         setRest(false);
       }
@@ -449,7 +451,7 @@ const Exercises = () => {
       setText("Start Exercise");
       setSet(1);
       setRest(false);
-      setSecondsRemaining(60);
+      setSecondsRemaining(10);
       setTimer(false);
       nextHandler();
     } else {
@@ -457,7 +459,7 @@ const Exercises = () => {
       setSet(1);
       setRest(false);
       shuffleAndShowExercise();
-      setSecondsRemaining(60);
+      setSecondsRemaining(10);
       nextHandler();
       setTimer(false);
       setText("Start Exercise");

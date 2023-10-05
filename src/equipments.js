@@ -135,4 +135,10 @@ export const equipments = [
     title: "Elliptical Trainer",
     image: require("../assets/ferioLabs/ellipticaltrainer.png"),
   },
+  {
+    id: 23,
+    name: "",
+    title: "",
+    image: require("../assets/ferioLabs/ellipticaltrainer.png"),
+  },
 ];

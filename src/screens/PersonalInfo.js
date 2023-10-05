@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import MainLyout from "../layouts/MainLayout";
@@ -13,25 +20,26 @@ const PersonalInfo = () => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [userName, setUsername] = useState();
+  const [mail, setMail] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUsername();
+      getUsername();
   }, []);
 
   const getUsername = async () => {
-    // const userId = auth.currentUser.uid; // Replace with the actual UID
-    // Fetch the user's data from Firestore
-    const id= await AsyncStorage.getItem("userId")
-    console.log("iddddd", id)
-    const userDocRef = doc(db, "users", id);
+    setLoading(true);
+    const userDocRef = doc(db, "users", auth.currentUser.uid);
 
     try {
       const userDocSnapshot = await getDoc(userDocRef);
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
-        const userName = userData.username; // Extract the username
+        const userName = userData.username;
+        const mail = userData.mail;
         console.log("User's Name:", userName);
         setUsername(userName);
+        setMail(mail);
         // Now you have the user's name, and you can use it as needed on this screen.
       } else {
         console.log("User document does not exist.");
@@ -41,8 +49,9 @@ const PersonalInfo = () => {
     }
   };
 
+
   return (
-    <MainLyout heading="Personal Information">
+    <MainLyout heading="My Information">
       <View style={styles.card}>
         <TouchableOpacity
           style={{

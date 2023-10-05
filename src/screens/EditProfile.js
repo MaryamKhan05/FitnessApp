@@ -8,7 +8,7 @@ import {
   TextInput,
   ImageBackground,
   ActivityIndicator,
-  Modal
+  Modal,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -24,35 +24,34 @@ import ActiveButton from "../components/activeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateEmailFunction, updatePassword } from "../firebase/firebase";
 import { auth, db } from "../FirebaseConfig";
-import { getDoc, doc,setDoc } from "firebase/firestore";
-
-
-
-
+import { getDoc, doc, setDoc } from "firebase/firestore";
 
 const EditProfile = () => {
+  const navigation = useNavigation();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [newName, setNewName] = useState();
   const [newEmail, setNewEmail] = useState();
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
+  const [mail, setMail] = useState();
 
   const [userName, setUsername] = useState();
 
   const getUsername = async () => {
     const id = await AsyncStorage.getItem("userId");
-    console.log("iddddd", id);
-    const userDocRef = doc(db, "users", id);
+    console.log("iddkdkkdk", auth.currentUser.uid);
+    const userDocRef = doc(db, "users", auth.currentUser.uid);
 
     try {
       console.log("User's Name:::");
       const userDocSnapshot = await getDoc(userDocRef);
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
-        const userName = userData.username; // Extract the username
+        const userName = userData.username;
+        const mail = userData.mail;
         console.log("User's Name:::", userName);
         setUsername(userName);
-        // Now you have the user's name, and you can use it as needed on this screen.
+        setMail(mail);
       } else {
         console.log("User document does not exist.");
       }
@@ -61,15 +60,11 @@ const EditProfile = () => {
     }
   };
 
-
   useEffect(() => {
     getNameHandler();
     getMailHandler();
     getUsername();
   }, []);
-
-
-
 
   const getNameHandler = async () => {
     try {
@@ -89,9 +84,6 @@ const EditProfile = () => {
     }
   };
 
-
-
-
   const saveNewInfoHandler = async () => {
     try {
       await AsyncStorage.setItem("Name", newName);
@@ -101,29 +93,25 @@ const EditProfile = () => {
     }
   };
 
-
-
-
-
-
   const updateUsername = async () => {
-    setLoading(true)
+    setLoading(true);
     const id = await AsyncStorage.getItem("userId"); // Get the user's UID from AsyncStorage
-    const userDocRef = doc(db, "users", id);
-  
+    const userDocRef = doc(db, "users", auth.currentUser.uid);
+
     try {
       await setDoc(userDocRef, { username: newName }, { merge: true });
       alert("Username updated successfully");
-      setLoading(false)
+      navigation.navigate("Home");
+
+      setLoading(false);
     } catch (error) {
       alert("Error updating username:", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-
   return (
-    <MainLyout heading="Personal Information">
+    <MainLyout heading="My Information">
       <View style={styles.card}>
         <TouchableOpacity
           style={{
@@ -191,7 +179,7 @@ const EditProfile = () => {
           <Text style={styles.text}>Email:</Text>
           <TextInput
             style={Styles.profileInput}
-            placeholder={auth.currentUser.email}
+            placeholder={mail}
             placeholderTextColor={"#666666"}
             onChangeText={(text) => setNewEmail(text)}
             autoCapitalize="none"

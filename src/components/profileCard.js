@@ -23,11 +23,20 @@ const ProfileCard = (props) => {
     }
   };
 
-  const handleSignout = () => {
+  const clearDataHandler = async () => {
+    try {
+      await AsyncStorage.clear();
+      // navigation.navigate("Login");
+      console.log("cleared" )
+    } catch (e) {
+      console.log("err", e);
+    }
+  };
+  const handleSignout = async () => {
     auth
       .signOut()
       .then(() => {
-        navigation.navigate("Login");
+        clearDataHandler();
       })
       .catch((error) => alert(error.message));
   };
@@ -35,8 +44,8 @@ const ProfileCard = (props) => {
     <TouchableOpacity
       style={styles.card}
       onPress={() => [
-        props.text=="Logout"? handleSignout:null ,
-        props.onPress == "Equiments" ? deleteEquipmentHandler() : null,
+        props.text == "Logout" ? handleSignout : null,
+        // props.onPress == "Equiments" ? deleteEquipmentHandler() : null,
         navigation.navigate(props.onPress),
       ]}
     >

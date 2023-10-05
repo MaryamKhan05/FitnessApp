@@ -26,7 +26,7 @@ const Equiments = () => {
     setLoading(true);
     try {
       await AsyncStorage.setItem("eFlag", "true");
-      console.log("saved flag to storage");
+      console.log("saved flag to storage")               ;
     } catch (e) {
       console.log("error saving equipment flag to storage", e);
     }

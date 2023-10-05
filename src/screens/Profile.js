@@ -9,6 +9,7 @@ import {
   Modal,
   TextInput,
   Linking,
+  ActivityIndicator
 } from "react-native";
 
 import Entypo from "react-native-vector-icons/Entypo";
@@ -24,12 +25,14 @@ import MainLyout from "../layouts/MainLayout";
 import colors from "../../assets/colors/colors";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 const size = 25;
 const color = "#B1B1B1";
 const starSize = 40,
   starActiveColor = "#FFAA00",
   starInactiveColor = "#8C8C98";
 const Profile = () => {
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [star1, setStar1] = useState(false);
   const [star2, setStar2] = useState(false);
@@ -40,12 +43,17 @@ const Profile = () => {
   const [upgradeModal, setUpgradeModal] = useState(false);
   const [name, setName] = useState();
   const [userName, setUsername] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUsername();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getUsername();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const getUsername = async () => {
+    setLoading(true);
     const userId = auth.currentUser.uid; // Replace with the actual UID
     console.log("auth.currentUser.uid", auth.currentUser.uid);
     // Fetch the user's data from Firestore
@@ -58,12 +66,15 @@ const Profile = () => {
         const userName = userData.username; // Extract the username
         console.log("User's Name::::::", userName);
         setUsername(userName);
+        setLoading(false);
         // Now you have the user's name, and you can use it as needed on this screen.
       } else {
         console.log("User document does not exist.");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error getting user document:", error);
+      setLoading(false);
     }
   };
 
@@ -96,6 +107,14 @@ const Profile = () => {
       });
   };
 
+  if (loading) {
+    return (
+      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+        <ActivityIndicator size={"large"} color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <MainLyout heading="My Profile">
       <View style={styles.card}>
@@ -124,11 +143,11 @@ const Profile = () => {
             style={{ height: 70, width: 70 }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold", }}>
+        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
           {userName}
         </Text>
       </View>
-      <ProfileCard text="Personal Information" onPress="ProfileInfo">
+      <ProfileCard text="My Information" onPress="ProfileInfo">
         <FontAwesome
           name="user"
           size={size}

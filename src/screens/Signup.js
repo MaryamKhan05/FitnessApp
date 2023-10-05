@@ -110,10 +110,10 @@ const Signup = () => {
             // Store the username in Firebase Realtime Database or Firestore
             const username = name; // Replace with the actual username
             const userId = user.uid; // The UID of the signed-up user
-
+            const mail = email;
             // Firebase Realtime Database example:
             const userDocRef = doc(db, "users", userId);
-            await setDoc(userDocRef, { username });
+            await setDoc(userDocRef, { username, mail });
             setLoading(false);
           })
           .catch((error) => {

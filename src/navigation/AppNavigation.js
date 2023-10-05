@@ -22,12 +22,12 @@ import HomeStack from "./TabNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, View } from "react-native";
 import colors from "../../assets/colors/colors";
-
+import { auth, db } from "../FirebaseConfig";
 const Stack = createNativeStackNavigator();
 
 const AppNav = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getTokenHandler();
@@ -59,7 +59,7 @@ const AppNav = () => {
     <NavigationContainer>
       {/* {loggedIn ? ( */}
       <Stack.Navigator
-        initialRouteName={loggedIn == true ? "TabNav" : "Onboarding"}
+        initialRouteName={auth.currentUser?.uid ? "TabNav" : "Onboarding"}
       >
         <Stack.Screen
           name="Signin"

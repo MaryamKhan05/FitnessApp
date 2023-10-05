@@ -45,17 +45,13 @@ const Signin = () => {
       saveTokenHandler();
     }
   }, [token]);
-  useEffect(() => {
-    if (userId) {
-      console.log('0000', userId)
-      saveUserIdHandler();
-    }
-  }, [userId]);
+
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         
-        navigation.navigate("TabNav");
+        // navigation.navigate("TabNav");
       }
     });
     return unsubscribe;
@@ -69,21 +65,16 @@ const Signin = () => {
       console.log("error saving token after login", e);
     }
   };
-  const saveUserIdHandler = async (id) => {
-    try {
-      await AsyncStorage.setItem("userId", id);
-      console.log("saved");
-    } catch (e) {
-      console.log("error saving id after login", e);
-    }
-  };
+
+
   const handleSignIn = async() => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setToken(userCredential._tokenResponse.idToken);
         console.log("userCredential._tokenResponse", userCredential.user.uid);
-        saveUserIdHandler(userCredential.user.uid)
+        // saveUserIdHandler(userCredential.user.uid)
         setLoading(false);
+        navigation.navigate("TabNav")
       })
       .catch((error) => {
         console.log("error", error);
