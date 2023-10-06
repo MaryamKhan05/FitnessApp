@@ -59,7 +59,7 @@ const AppNav = () => {
     <NavigationContainer>
       {/* {loggedIn ? ( */}
       <Stack.Navigator
-        initialRouteName={auth.currentUser?.uid ? "TabNav" : "Onboarding"}
+        initialRouteName={loggedIn ? "TabNav" : "Onboarding"}
       >
         <Stack.Screen
           name="Signin"
