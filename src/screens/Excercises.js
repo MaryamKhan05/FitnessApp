@@ -19,9 +19,11 @@ import Divider from "../components/divider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import workout from "../workoutList";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Exercises = () => {
+  const route = useRoute();
+  console.log("route", route.params?.updatedWorkoutArray?.length);
   const navigation = useNavigation();
   const [setNumber, setSetNumber] = useState(1);
   const [secondsRemaining, setSecondsRemaining] = useState(10);
@@ -76,31 +78,35 @@ const Exercises = () => {
   }, []);
 
   const getValuesFromStorage = async () => {
-    const cat = await AsyncStorage.getItem("Category");
-    setCategory(cat);
+    // const cat = await AsyncStorage.getItem("Category");
+    // // console.log("cat", cat[0]);
+    // const l = JSON.parse(cat);
+    // console.log("lllll", l);
+    // setCategory(l);
 
     const equi = await AsyncStorage.getItem("Equipments");
     const e = JSON.parse(equi);
-    console.log(e, "eeeee");
+    // console.log(e, "eeeee");
     setEquipment(e);
   };
 
   useEffect(() => {
-    if (day && category) {
+    if (day) {
       if (equipment.length > 0) {
         // console.log("hhshhshhsh", equipment);
-        const data = workout[category] || workout.core;
+        // const data = workout[category] || workout.core;
+        const data = route?.params?.updatedWorkoutArray;
         setData(data);
-        console.log("fata", data)
+        console.log("pppp", data[0]);
 
         const grp =
           day === "Monday" || day === "Wednesday" || day === "Friday"
             ? data?.groups[1]?.ex
             : data?.groups[2]?.ex;
         setGroup(grp);
-        console.log("grp", grp)
+        console.log("grp", grp);
       } else {
-        const data = workout[category] || workout.core;
+        const data = route?.params?.updatedWorkoutArray;
         setData(data);
 
         // console.log("lkgffcvb", data);
@@ -108,65 +114,65 @@ const Exercises = () => {
     }
   }, [day, category]);
 
-  useEffect(() => {
-    if (data && group && equipment.length > 0) {
-      console.log("uuuuu");
-      // console.log("equipments", equipment);
-      const filteredExercises = Object.values(data?.exercises).filter(
-        (exercise) => group.includes(exercise.id)
-      );
-      console.log("filtered", filteredExercises);
-      const finalArray = filteredExercises?.filter((exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        )
-      );
-      console.log("FINAL", finalArray);
-      setFinalArray(finalArray);
-    }
-  }, [group, equipment]);
+  // useEffect(() => {
+  //   if (data && group && equipment.length > 0) {
+  //     console.log("uuuuu");
+  //     // console.log("equipments", equipment);
+  //     const filteredExercises = Object.values(data?.exercises).filter(
+  //       (exercise) => group.includes(exercise.id)
+  //     );
+  //     console.log("filtered", filteredExercises);
+  //     const finalArray = filteredExercises?.filter((exercise) =>
+  //       exercise.equipmentRequired?.some((equipmentType) =>
+  //         equipment.includes(equipmentType)
+  //       )
+  //     );
+  //     console.log("FINAL", finalArray);
+  //     setFinalArray(finalArray);
+  //   }
+  // }, [group, equipment]);
 
   // new code when there is no equipment
-  useEffect(() => {
-    if (data && equipment.length === 0) {
-      let group = [...data?.groups[1]?.ex, ...data?.groups[2]?.ex];
-      setGroup(group);
-      const finalArray = Object.values(data?.exercises).filter(
-        (exercise) =>
-          group.includes(exercise.id) &&
-          exercise.equipmentRequired.some(
-            (equipmentType) => equipmentType === ""
-          )
-      );
-      console.log("finalArray is", finalArray);
-      // console.log("exercise.equipmentRequired",exercise?.equipmentRequired)
-      if (finalArray.length === 0) {
-        console.log("No Exercises To Show");
-        setStartButton(false);
-      }
-      setFinalArray(finalArray);
-    }
-  }, [equipment]);
+  // useEffect(() => {
+  //   if (data && equipment.length === 0) {
+  //     let group = [...data?.groups[1]?.ex, ...data?.groups[2]?.ex];
+  //     setGroup(group);
+  //     const finalArray = Object.values(data?.exercises).filter(
+  //       (exercise) =>
+  //         group.includes(exercise.id) &&
+  //         exercise.equipmentRequired.some(
+  //           (equipmentType) => equipmentType === ""
+  //         )
+  //     );
+  //     console.log("finalArray is", finalArray);
+  //     // console.log("exercise.equipmentRequired",exercise?.equipmentRequired)
+  //     if (finalArray.length === 0) {
+  //       console.log("No Exercises To Show");
+  //       setStartButton(false);
+  //     }
+  //     setFinalArray(finalArray);
+  //   }
+  // }, [equipment]);
 
-  useEffect(() => {
-    if (finalArray) {
-      if (!calledOnce) {
-        console.log("hhehyeyey", finalArray[0]?.name);
-        console.log("array before", finalArray.length);
-        for (let i = finalArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [finalArray[i], finalArray[j]] = [finalArray[j], finalArray[i]];
-        }
+  // useEffect(() => {
+  //   if (finalArray) {
+  //     if (!calledOnce) {
+  //       console.log("hhehyeyey", finalArray[0]?.name);
+  //       console.log("array before", finalArray.length);
+  //       for (let i = finalArray.length - 1; i > 0; i--) {
+  //         const j = Math.floor(Math.random() * (i + 1));
+  //         [finalArray[i], finalArray[j]] = [finalArray[j], finalArray[i]];
+  //       }
 
-        console.log("array afetr", finalArray.length);
-        setShuffledArray(finalArray);
-        setExName(finalArray[currentExerciseIndex]?.name);
-        setGif(finalArray[currentExerciseIndex]?.asset);
-      }
-    } else {
-      Alert.alert("No matching exercises found.");
-    }
-  }, [finalArray]);
+  //       console.log("array afetr", finalArray.length);
+  //       setShuffledArray(finalArray);
+  //       setExName(finalArray[currentExerciseIndex]?.name);
+  //       setGif(finalArray[currentExerciseIndex]?.asset);
+  //     }
+  //   } else {
+  //     Alert.alert("No matching exercises found.");
+  //   }
+  // }, [finalArray]);
 
   // useEffect(() => {
   //   if (currentExerciseIndex) {
@@ -280,41 +286,41 @@ const Exercises = () => {
   //   }
   // }, [shuffledArray, randomExercise]);
 
-  useEffect(() => {
-    if (startTimer == true) {
-      const countdown = setInterval(() => {
-        if (secondsRemaining > 0) {
-          setSecondsRemaining(secondsRemaining - 1);
-        } else if (secondsRemaining == 0) {
-          // setCount(count + 1);
-          if (set < 3) {
-            setText("Next Set");
-          }
-          setTimer(false);
-          setRestModal(true);
-          setRestTimer(true);
-          chingHandler();
-        }
-      }, 1000);
-      return () => clearInterval(countdown);
-    }
-  }, [secondsRemaining, startTimer]);
+  // useEffect(() => {
+  //   if (startTimer == true) {
+  //     const countdown = setInterval(() => {
+  //       if (secondsRemaining > 0) {
+  //         setSecondsRemaining(secondsRemaining - 1);
+  //       } else if (secondsRemaining == 0) {
+  //         // setCount(count + 1);
+  //         if (set < 3) {
+  //           setText("Next Set");
+  //         }
+  //         setTimer(false);
+  //         setRestModal(true);
+  //         setRestTimer(true);
+  //         chingHandler();
+  //       }
+  //     }, 1000);
+  //     return () => clearInterval(countdown);
+  //   }
+  // }, [secondsRemaining, startTimer]);
 
   // rest timer
-  useEffect(() => {
-    if (restTimer) {
-      const countdown = setInterval(() => {
-        if (rest > 0) {
-          setRest(rest - 1);
-        } else if (rest == 0) {
-          setRestModal(false);
-          setRestTimer(false);
-          setRest(15);
-        }
-      }, 1000);
-      return () => clearInterval(countdown);
-    }
-  }, [secondsRemaining, rest, restTimer]);
+  // useEffect(() => {
+  //   if (restTimer) {
+  //     const countdown = setInterval(() => {
+  //       if (rest > 0) {
+  //         setRest(rest - 1);
+  //       } else if (rest == 0) {
+  //         setRestModal(false);
+  //         setRestTimer(false);
+  //         setRest(15);
+  //       }
+  //     }, 1000);
+  //     return () => clearInterval(countdown);
+  //   }
+  // }, [secondsRemaining, rest, restTimer]);
 
   const minutes = Math.floor(secondsRemaining / 60);
   const seconds = secondsRemaining % 60;

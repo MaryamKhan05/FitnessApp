@@ -14,35 +14,39 @@ import colors from "../../assets/colors/colors";
 import MainLyout from "../layouts/MainLayout";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import workout from "../workoutList";
 const Home = () => {
   const navigation = useNavigation();
   const [upper, setUpper] = useState(false);
   const [core, setCore] = useState(false);
   const [lower, setLower] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [list, setList] = useState([]);
   const size = 20;
   const color = "green";
 
   const handleNext = async () => {
+    let updatedWorkoutArray = [];
+    if (upper) {
+      updatedWorkoutArray.push(workout.upperBody);
+    }
+    if (lower) {
+      updatedWorkoutArray.push(workout.upperBody);
+    }
+    if (core) {
+      updatedWorkoutArray.push(workout.upperBody);
+    }
+    setList(updatedWorkoutArray);
+    // console.log("updatedWorkoutArray",updatedWorkoutArray.length)
     try {
-      if (upper) {
-        await AsyncStorage.setItem("Category", "upperBody");
-        console.log("upper")
-      } else if (lower) {
-        await AsyncStorage.setItem("Category", "lowerBody");
-        console.log("lower")
-      } else {
-        await AsyncStorage.setItem("Category", "core");
-        console.log("core")
-      }
-      console.log("hehe saved");
-      navigation.navigate("Exercises");
+      await AsyncStorage.setItem("Categories", JSON.stringify(list));
+
+      navigation.navigate("Exercises",{updatedWorkoutArray});
     } catch (e) {
       console.log("error saving category to storage", e);
     }
   };
 
-  
   return (
     <MainLyout heading="Today's Workout">
       <Text
