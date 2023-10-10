@@ -71,7 +71,12 @@ const AppNav = () => {
   return (
     <NavigationContainer>
       {!user ? (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName={loggedIn ? "Login" : "Onboarding"}>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Signin"
             component={Signin}
@@ -80,11 +85,6 @@ const AppNav = () => {
           <Stack.Screen
             name="Onboarding"
             component={Onboarding}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
             options={{ headerShown: false }}
           />
 

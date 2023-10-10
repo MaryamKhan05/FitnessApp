@@ -16,6 +16,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../assets/colors/colors";
+import { auth, db } from "../FirebaseConfig";
+import { getDoc, doc, setDoc, collection, addDoc } from "firebase/firestore";
 const Equiments = () => {
   const navigation = useNavigation();
   const [equipmentArray, setEquipmentArray] = useState([]);
@@ -24,18 +26,27 @@ const Equiments = () => {
 
   const saveToAsyncHandler = async () => {
     setLoading(true);
+
     try {
-      await AsyncStorage.setItem("eFlag", "true");
-      console.log("saved flag to storage")               ;
+      const userId = auth.currentUser.uid;
+      console.log(userId, "userId");
+      const userDocRef = doc(db, "users", userId);
+      const equipmentsCollectionRef = collection(userDocRef, "equipments");
+
+      await addDoc(equipmentsCollectionRef, {
+        selectedEquipment: equipmentArray,
+      });
+      console.log("Stored equipment data in Firestore");
     } catch (e) {
-      console.log("error saving equipment flag to storage", e);
+      console.error("Error storing equipment data in Firestore", e);
     }
-    try {
-      await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
-      navigation.navigate("TabNav");
-    } catch (e) {
-      console.log("error saving equipments to storage");
-    }
+
+    // try {
+    //   await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
+    //   navigation.navigate("TabNav");
+    // } catch (e) {
+    //   console.log("error saving equipments to storage");
+    // }
 
     setLoading(false);
   };

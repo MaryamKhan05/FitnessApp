@@ -23,7 +23,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Exercises = () => {
   const route = useRoute();
-  // console.log("route", route.params?.updatedWorkoutArray?.length);
+  // console.log("route", route.params?.updatedWorkoutArray.length);
   const navigation = useNavigation();
   const [setNumber, setSetNumber] = useState(1);
   const [secondsRemaining, setSecondsRemaining] = useState(10);
@@ -54,8 +54,13 @@ const Exercises = () => {
   const [exName, setExName] = useState();
   const [gif, setGif] = useState();
   const [startButton, setStartButton] = useState(true);
-  const [newly, setNewly] = useState();
 
+  const [newly, setNewly] = useState([]);
+
+  //get values from storage
+  useEffect(() => {
+    getValuesFromStorage();
+  }, []);
   // get the day
 
   useEffect(() => {
@@ -72,10 +77,8 @@ const Exercises = () => {
     ];
     const currentDayString = daysOfWeek[currentDay];
     setDay(currentDayString);
-  }, []);
-  //get values from storage
-  useEffect(() => {
-    getValuesFromStorage();
+    let DATA = route?.params?.updatedWorkoutArray;
+    setData(DATA);
   }, []);
 
   const getValuesFromStorage = async () => {
@@ -90,84 +93,75 @@ const Exercises = () => {
     setEquipment(e);
   };
 
-  useEffect(() => {
-    if (day) {
-      console.log('day is', day)
-      let data = route?.params?.updatedWorkoutArray;
-      setData(data);
-      // let equipment=[""]
-      let array = [];
-      // console.log(equipment);
+  const mainFuntion = () => {
+    let exerciseArray = [];
+    console.log("equipment;;;;", equipment, "equipment");
+    if (data.some((item) => item.type === "upperBody")) {
+      let upper = data.filter((item) => item.type === "upperBody");
+      let grp =
+        day === "Monday" || day === "Wednesday" || day === "Friday"
+          ? upper[0].groups[1].ex
+          : upper[0].groups[2].ex;
 
-      if (data.some((item) => item.type === "upperBody")) {
-        let upper = data.filter((item) => item.type === "upperBody");
-        let grp =
-          day === "Monday" || day === "Wednesday" || day === "Friday"
-            ? upper[0].groups[1].ex
-            : upper[0].groups[2].ex;
-        let newArray = Object.values(upper[0]?.exercises).filter(
-          (exercise) =>
-            grp.includes(exercise.id) &&
-            exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
-            )
-        );
-        console.log("upper pppp", newArray.length, "mmmmmm");
-
-        array = [...array, ...newArray];
-        console.log("llllll", array.length, "upper");
-      }
-      if (data.some((item) => item.type === "lowerBody")) {
-        let lower = data.filter((item) => item.type === "lowerBody");
-        let grp =
-          day === "Tuesday" || day === "Thursday"
-            ? lower[0].groups[1].ex
-            : lower[0].groups[2].ex;
-        let newArray = Object.values(lower[0]?.exercises).filter(
-          (exercise) =>
-            grp.includes(exercise.id) &&
-            exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
-            )
-        );
-        console.log("lowerBody will be:::::", newArray.length);
-        // newArray = Object.values(lower[0]?.exercises).filter((exercise) =>
-        //   exercise.equipmentRequired?.some((equipmentType) =>
-        //     equipment.includes(equipmentType)
-        //   )
-        // );
-        console.log("nnnnnnn", newArray.length, "lower");
-        array = [...array, ...newArray];
-        console.log(array.length,'lower')
-      }
-      // if (data.some((item) => item.type === "core")) {
-      //   let core = data.filter((item) => item.type === "core");
-      //   let grp =
-      //     day === "Saturday" || day === "Sunday"
-      //       ? core[0].groups[1].ex
-      //       : core[0].groups[2].ex;
-      //       let newArray = Object.values(core[0]?.exercises).filter((exercise) =>
-      //       grp.includes(exercise.id)
-      //     );
-      //     // console.log("upper will be:::::", newArray.length);
-      //     newArray = Object.values(core[0]?.exercises).filter((exercise) =>
-      //       exercise.equipmentRequired?.some((equipmentType) =>
-      //         equipment.includes(equipmentType)
-      //       )
-      //     );
-      //   console.log(newArray.length, "core");
-      //   array = [...array, ...newArray];
-      // }
-      // console.log("array:::::::::::::::", array, ":::::::::::araayyyyyy");
-      // setNewly([...finalArray, ...array]);
+      let newArray = Object.values(upper[0]?.exercises).filter((exercise) =>
+        grp.includes(exercise.id)
+      );
+      const finalArray = newArray?.filter((exercise) =>
+        exercise.equipmentRequired?.some((equipmentType) =>
+          equipment.includes(equipmentType)
+        )
+      );
+      exerciseArray = [...exerciseArray, ...finalArray];
     }
-  }, [day]);
+    if (data.some((item) => item.type === "lowerBody")) {
+      let lower = data.filter((item) => item.type === "lowerBody");
+      let grp =
+        day === "Tuesday" || day === "Thursday"
+          ? lower[0].groups[1].ex
+          : lower[0].groups[2].ex;
+
+      let newArray = Object.values(lower[0]?.exercises).filter((exercise) =>
+        grp.includes(exercise.id)
+      );
+      // console.log("newArray", newArray,'llllllsssss');
+      const finalArray = newArray?.filter((exercise) =>
+        exercise.equipmentRequired?.some((equipmentType) =>
+          equipment.includes(equipmentType)
+        )
+      );
+      // console.log(finalArray.length, "final");
+      exerciseArray = [...exerciseArray, ...finalArray];
+    }
+    if (data.some((item) => item.type === "core")) {
+      let core = data.filter((item) => item.type === "core");
+      let grp =
+        day === "Tuesday" || day === "Thursday"
+          ? core[0].groups[1].ex
+          : core[0].groups[2].ex;
+
+      let newArray = Object.values(core[0]?.exercises).filter((exercise) =>
+        grp.includes(exercise.id)
+      );
+      console.log("newArray", newArray,'llllllsssss');
+      const finalArray = newArray?.filter((exercise) =>
+        exercise.equipmentRequired?.some((equipmentType) =>
+          equipment.includes(equipmentType)
+        )
+      );
+      console.log(finalArray.length, "final");
+      exerciseArray = [...exerciseArray, ...finalArray];
+    }
+
+
+    console.log('exerciseArray',exerciseArray,'exerciseArray')
+  };
 
   useEffect(() => {
-    if (newly) {
-      console.log(newly.length, "hehhehehehuuuuu");
+    if (data && equipment) {
+      console.log("equipmentyyyyyyyy", equipment, "equipment");
+      mainFuntion();
     }
-  }, [newly]);
+  }, [data, equipment]);
 
   function shuffleArray() {
     let array = finalArray;

@@ -76,65 +76,69 @@ const Signup = () => {
     }
   };
 
-  const saveTokenHandler = async () => {
-    try {
-      await AsyncStorage.setItem("token", token);
-      // await AsyncStorage.setItem("userId", userId);
-    } catch (e) {
-      console.log("error saving token after signup", e);
-      console.log("error saving id after signup", e);
-    }
-  };
-  useEffect(() => {
-    if (token) {
-      saveTokenHandler();
-      Alert.alert("Signed Up Successfully ! ");
-      if (flag) {
-        navigation.navigate("TabNav");
-      } else {
-        navigation.navigate("Equiments");
-      }
-      // setTimeout(() => {
-      // }, 2000);
-    }
-  }, [token]);
+  // const saveTokenHandler = async () => {
+  //   try {
+  //     await AsyncStorage.setItem("token", token);
+  //     // await AsyncStorage.setItem("userId", userId);
+  //   } catch (e) {
+  //     console.log("error saving token after signup", e);
+  //     console.log("error saving id after signup", e);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (token) {
+  //     saveTokenHandler();
+  //     if (flag) {
+  //       // navigation.navigate("TabNav");
+  //     } else {
+  //       // navigation.navigate("Equiments");
+  //     }
+  //     // setTimeout(() => {
+  //     // }, 2000);
+  //   }
+  // }, [token]);
 
   // const handleSignUp = async () => {
-  //   if (terms && liability) {
-  //     setLoading(true);
-  //     if (password == confirmPassword) {
-  //       setLoading(true);
-  //       createUserWithEmailAndPassword(auth, email, password)
-  //         .then(async (userCredential) => {
-  //           const user = userCredential.user;
-  //           setToken(userCredential._tokenResponse.idToken);
-  //           console.log("usid", userCredential._tokenResponse);
-  //           setUserId(userCredential.user.providerData.uid);
+  //   const trimmedEmail = email.trim();
+  //   const trimmedPassword = password.trim();
+  //   const trimmedConfirmPassword = confirmPassword.trim();
+  //   const trimmedName = name.trim();
 
-  //           const username = name;
-  //           const userId = user.uid;
-  //           const mail = email;
-
-  //           const userDocRef = doc(db, "users", userId);
-  //           await setDoc(userDocRef, { username, mail });
-  //           setLoading(false);
-  //         })
-  //         .catch((error) => {
-  //           console.log("error", error);
-  //           const errorMessage = error.message;
-  //           alert(errorMessage);
-  //           setLoading(false);
-  //         });
-  //     } else {
-  //       Alert.alert("Password doesn't match");
-  //       setLoading(false);
-  //     }
-  //   } else {
+  //   if (!terms || !liability) {
   //     Alert.alert(
-  //       "Make sure to mark Terms of Services and Release of liability "
+  //       "Make sure to mark Terms of Services and Release of liability"
   //     );
+  //     return;
   //   }
-  //   setLoading(false);
+
+  //   if (trimmedPassword !== trimmedConfirmPassword) {
+  //     Alert.alert("Password doesn't match");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
+  //     .then(async (userCredential) => {
+  //       const user = userCredential.user;
+  //       setToken(userCredential._tokenResponse.idToken);
+  //       console.log("usid", userCredential._tokenResponse);
+  //       setUserId(userCredential.user.providerData.uid);
+
+  //       const username = trimmedName;
+  //       const userId = user.uid;
+  //       const mail = trimmedEmail;
+
+  //       const userDocRef = doc(db, "users", userId);
+  //       await setDoc(userDocRef, { username, mail });
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log("error", error);
+  //       const errorMessage = error.message;
+  //       alert(errorMessage);
+  //       setLoading(false);
+  //     });
   // };
 
   const handleSignUp = async () => {
@@ -160,9 +164,15 @@ const Signup = () => {
     createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        setToken(userCredential._tokenResponse.idToken);
-        console.log("usid", userCredential._tokenResponse);
-        setUserId(userCredential.user.providerData.uid);
+
+        // Send verification email
+        await sendEmailVerification(user);
+        alert(
+          "Verification email has been sent. Please check your email to verify your account."
+        );
+        // Set user data
+        // setToken(userCredential._tokenResponse.idToken);
+        // setUserId(userCredential.user.providerData.uid);
 
         const username = trimmedName;
         const userId = user.uid;
@@ -171,6 +181,8 @@ const Signup = () => {
         const userDocRef = doc(db, "users", userId);
         await setDoc(userDocRef, { username, mail });
         setLoading(false);
+
+        // Notify the user that a verification email has been sent
       })
       .catch((error) => {
         console.log("error", error);
@@ -179,7 +191,6 @@ const Signup = () => {
         setLoading(false);
       });
   };
-
   return (
     <RegLayout>
       <KeyboardAwareScrollView
