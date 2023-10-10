@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -15,6 +16,9 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { auth, db } from "../FirebaseConfig";
 import { getDoc, doc } from "firebase/firestore";
+import Styles from "./Styles";
+import {ActiveButton} from "../components/INDEX";
+import { updatePass } from "../firebase/firebase";
 const PersonalInfo = () => {
   const navigation = useNavigation();
   const [name, setName] = useState();
@@ -22,6 +26,9 @@ const PersonalInfo = () => {
   const [userName, setUsername] = useState();
   const [mail, setMail] = useState();
   const [loading, setLoading] = useState(false);
+  const [pass, setPass] = useState();
+  const [newPass, setNewPass] = useState();
+  const [confirmPass, setConfirmPass] = useState();
 
   useEffect(() => {
       getUsername();
@@ -123,6 +130,36 @@ const PersonalInfo = () => {
           <Text style={[styles.text, styles.details]}>
             {auth.currentUser?.email}
           </Text>
+        </View>
+      </View>
+      <View style={styles.card}>
+        <TextInput
+          style={Styles.forgotInput}
+          placeholder="Current Password"
+          placeholderTextColor={"#666666"}
+          onChangeText={(text) => setPass(text)}
+          autoCapitalize="none"
+        />
+
+        <TextInput
+          style={Styles.forgotInput}
+          placeholder="New Password"
+          placeholderTextColor={"#666666"}
+          onChangeText={(text) => setNewPass(text)}
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={Styles.forgotInput}
+          placeholder="Confirm New Password"
+          placeholderTextColor={"#666666"}
+          onChangeText={(text) => setConfirmPass(text)}
+          autoCapitalize="none"
+        />
+
+        <View style={{ marginTop: 20 }}>
+          <TouchableOpacity onPress={()=>updatePass(pass,newPass)}>
+            <ActiveButton title="Save Changes" />
+          </TouchableOpacity>
         </View>
       </View>
     </MainLyout>

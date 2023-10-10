@@ -28,7 +28,10 @@ import colors from "../../assets/colors/colors";
 import Styles from "./Styles";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../FirebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getFirestore,
@@ -96,42 +99,85 @@ const Signup = () => {
     }
   }, [token]);
 
+  // const handleSignUp = async () => {
+  //   if (terms && liability) {
+  //     setLoading(true);
+  //     if (password == confirmPassword) {
+  //       setLoading(true);
+  //       createUserWithEmailAndPassword(auth, email, password)
+  //         .then(async (userCredential) => {
+  //           const user = userCredential.user;
+  //           setToken(userCredential._tokenResponse.idToken);
+  //           console.log("usid", userCredential._tokenResponse);
+  //           setUserId(userCredential.user.providerData.uid);
+
+  //           const username = name;
+  //           const userId = user.uid;
+  //           const mail = email;
+
+  //           const userDocRef = doc(db, "users", userId);
+  //           await setDoc(userDocRef, { username, mail });
+  //           setLoading(false);
+  //         })
+  //         .catch((error) => {
+  //           console.log("error", error);
+  //           const errorMessage = error.message;
+  //           alert(errorMessage);
+  //           setLoading(false);
+  //         });
+  //     } else {
+  //       Alert.alert("Password doesn't match");
+  //       setLoading(false);
+  //     }
+  //   } else {
+  //     Alert.alert(
+  //       "Make sure to mark Terms of Services and Release of liability "
+  //     );
+  //   }
+  //   setLoading(false);
+  // };
+
   const handleSignUp = async () => {
-    if (terms && liability) {
-      setLoading(true);
-      if (password == confirmPassword) {
-        setLoading(true);
-        createUserWithEmailAndPassword(auth, email, password)
-          .then(async (userCredential) => {
-            const user = userCredential.user;
-            setToken(userCredential._tokenResponse.idToken);
-            console.log("usid", userCredential._tokenResponse);
-            setUserId(userCredential.user.providerData.uid);
-            // Store the username in Firebase Realtime Database or Firestore
-            const username = name; // Replace with the actual username
-            const userId = user.uid; // The UID of the signed-up user
-            const mail = email;
-            // Firebase Realtime Database example:
-            const userDocRef = doc(db, "users", userId);
-            await setDoc(userDocRef, { username, mail });
-            setLoading(false);
-          })
-          .catch((error) => {
-            console.log("error", error);
-            const errorMessage = error.message;
-            alert(errorMessage);
-            setLoading(false);
-          });
-      } else {
-        Alert.alert("Password doesn't match");
-        setLoading(false);
-      }
-    } else {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const trimmedConfirmPassword = confirmPassword.trim();
+    const trimmedName = name.trim();
+
+    if (!terms || !liability) {
       Alert.alert(
-        "Make sure to mark Terms of Services and Release of liability "
+        "Make sure to mark Terms of Services and Release of liability"
       );
+      return;
     }
-    setLoading(false);
+
+    if (trimmedPassword !== trimmedConfirmPassword) {
+      Alert.alert("Password doesn't match");
+      return;
+    }
+
+    setLoading(true);
+
+    createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        setToken(userCredential._tokenResponse.idToken);
+        console.log("usid", userCredential._tokenResponse);
+        setUserId(userCredential.user.providerData.uid);
+
+        const username = trimmedName;
+        const userId = user.uid;
+        const mail = trimmedEmail;
+
+        const userDocRef = doc(db, "users", userId);
+        await setDoc(userDocRef, { username, mail });
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        const errorMessage = error.message;
+        alert(errorMessage);
+        setLoading(false);
+      });
   };
 
   return (

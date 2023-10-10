@@ -46,11 +46,9 @@ const Signin = () => {
     }
   }, [token]);
 
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        
         // navigation.navigate("TabNav");
       }
     });
@@ -60,21 +58,28 @@ const Signin = () => {
   const saveTokenHandler = async () => {
     try {
       await AsyncStorage.setItem("token", token);
-      console.log("saved token")
+      console.log("saved token");
     } catch (e) {
       console.log("error saving token after login", e);
     }
   };
 
+  const handleSignIn = async () => {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
-  const handleSignIn = async() => {
-    signInWithEmailAndPassword(auth, email, password)
+    if (!trimmedEmail || !trimmedPassword) {
+      alert("Please enter valid email and password");
+      return;
+    }
+
+    signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
       .then((userCredential) => {
         setToken(userCredential._tokenResponse.idToken);
         console.log("userCredential._tokenResponse", userCredential.user.uid);
         // saveUserIdHandler(userCredential.user.uid)
         setLoading(false);
-        navigation.navigate("TabNav")
+        navigation.navigate("TabNav");
       })
       .catch((error) => {
         console.log("error", error);

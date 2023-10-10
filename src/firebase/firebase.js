@@ -63,10 +63,15 @@ export const updatePass = (currentPassword, newPassword) => {
 // };
 
 export const handleResetPassword = async (email) => {
-  console.log(email, auth);
-  await sendPasswordResetEmail(auth, email)
+  const trimmedEmail = email.trim(); 
+
+  if (!trimmedEmail) {
+    alert("Please enter a valid email address");
+    return;
+  }
+  await sendPasswordResetEmail(auth, trimmedEmail)
     .then(() => {
-      alert("Mail Sent To Your Email", email);
+      alert("Mail Sent To Your Email", trimmedEmail);
     })
     .catch((error) => {
       alert("Error sending password reset email:", error);

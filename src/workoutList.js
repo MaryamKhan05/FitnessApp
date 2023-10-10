@@ -1,5 +1,6 @@
 let workout = {
   upperBody: {
+    type:'upperBody',
     groups: {
       1: {
         description: "Back and Biceps",
@@ -319,6 +320,7 @@ let workout = {
     },
   },
   lowerBody: {
+    type:'lowerBody',
     groups: {
       1: {
         description: "Quadriceps and Gluteal",
@@ -656,6 +658,7 @@ let workout = {
     },
   },
   core: {
+    type:'core',
     days: ["Saturday", "Sunday"],
     groups: {
       1: {

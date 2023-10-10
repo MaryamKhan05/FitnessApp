@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Exercises = () => {
   const route = useRoute();
-  console.log("route", route.params?.updatedWorkoutArray?.length);
+  // console.log("route", route.params?.updatedWorkoutArray?.length);
   const navigation = useNavigation();
   const [setNumber, setSetNumber] = useState(1);
   const [secondsRemaining, setSecondsRemaining] = useState(10);
@@ -54,6 +54,7 @@ const Exercises = () => {
   const [exName, setExName] = useState();
   const [gif, setGif] = useState();
   const [startButton, setStartButton] = useState(true);
+  const [newly, setNewly] = useState();
 
   // get the day
 
@@ -86,33 +87,104 @@ const Exercises = () => {
 
     const equi = await AsyncStorage.getItem("Equipments");
     const e = JSON.parse(equi);
-    // console.log(e, "eeeee");
     setEquipment(e);
   };
 
   useEffect(() => {
     if (day) {
-      if (equipment.length > 0) {
-        // console.log("hhshhshhsh", equipment);
-        // const data = workout[category] || workout.core;
-        const data = route?.params?.updatedWorkoutArray;
-        setData(data);
-        console.log("pppp", data[0]);
+      console.log('day is', day)
+      let data = route?.params?.updatedWorkoutArray;
+      setData(data);
+      // let equipment=[""]
+      let array = [];
+      // console.log(equipment);
 
-        const grp =
+      if (data.some((item) => item.type === "upperBody")) {
+        let upper = data.filter((item) => item.type === "upperBody");
+        let grp =
           day === "Monday" || day === "Wednesday" || day === "Friday"
-            ? data?.groups[1]?.ex
-            : data?.groups[2]?.ex;
-        setGroup(grp);
-        console.log("grp", grp);
-      } else {
-        const data = route?.params?.updatedWorkoutArray;
-        setData(data);
+            ? upper[0].groups[1].ex
+            : upper[0].groups[2].ex;
+        let newArray = Object.values(upper[0]?.exercises).filter(
+          (exercise) =>
+            grp.includes(exercise.id) &&
+            exercise.equipmentRequired?.some((equipmentType) =>
+              equipment.includes(equipmentType)
+            )
+        );
+        console.log("upper pppp", newArray.length, "mmmmmm");
 
-        // console.log("lkgffcvb", data);
+        array = [...array, ...newArray];
+        console.log("llllll", array.length, "upper");
       }
+      if (data.some((item) => item.type === "lowerBody")) {
+        let lower = data.filter((item) => item.type === "lowerBody");
+        let grp =
+          day === "Tuesday" || day === "Thursday"
+            ? lower[0].groups[1].ex
+            : lower[0].groups[2].ex;
+        let newArray = Object.values(lower[0]?.exercises).filter(
+          (exercise) =>
+            grp.includes(exercise.id) &&
+            exercise.equipmentRequired?.some((equipmentType) =>
+              equipment.includes(equipmentType)
+            )
+        );
+        console.log("lowerBody will be:::::", newArray.length);
+        // newArray = Object.values(lower[0]?.exercises).filter((exercise) =>
+        //   exercise.equipmentRequired?.some((equipmentType) =>
+        //     equipment.includes(equipmentType)
+        //   )
+        // );
+        console.log("nnnnnnn", newArray.length, "lower");
+        array = [...array, ...newArray];
+        console.log(array.length,'lower')
+      }
+      // if (data.some((item) => item.type === "core")) {
+      //   let core = data.filter((item) => item.type === "core");
+      //   let grp =
+      //     day === "Saturday" || day === "Sunday"
+      //       ? core[0].groups[1].ex
+      //       : core[0].groups[2].ex;
+      //       let newArray = Object.values(core[0]?.exercises).filter((exercise) =>
+      //       grp.includes(exercise.id)
+      //     );
+      //     // console.log("upper will be:::::", newArray.length);
+      //     newArray = Object.values(core[0]?.exercises).filter((exercise) =>
+      //       exercise.equipmentRequired?.some((equipmentType) =>
+      //         equipment.includes(equipmentType)
+      //       )
+      //     );
+      //   console.log(newArray.length, "core");
+      //   array = [...array, ...newArray];
+      // }
+      // console.log("array:::::::::::::::", array, ":::::::::::araayyyyyy");
+      // setNewly([...finalArray, ...array]);
     }
-  }, [day, category]);
+  }, [day]);
+
+  useEffect(() => {
+    if (newly) {
+      console.log(newly.length, "hehhehehehuuuuu");
+    }
+  }, [newly]);
+
+  function shuffleArray() {
+    let array = finalArray;
+    console.log(array, "oooo___ooooo");
+    // console.log("array before", array.length);
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    // console.log("array afetr", array);
+    // console.log("buhahahr", array.length);
+    setShuffledArray(array);
+    setExName(array[currentExerciseIndex]?.name);
+    setGif(array[currentExerciseIndex]?.asset);
+    // setCurrentExerciseIndex(currentExerciseIndex+1)
+  }
 
   // useEffect(() => {
   //   if (data && group && equipment.length > 0) {
@@ -241,20 +313,6 @@ const Exercises = () => {
       setTimer(false);
     }
   };
-
-  function shuffleArray(array) {
-    console.log("array before", array.length);
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-
-    console.log("array afetr", array.length);
-    setShuffledArray(array);
-    setExName(array[currentExerciseIndex]?.name);
-    setGif(array[currentExerciseIndex]?.asset);
-    // setCurrentExerciseIndex(currentExerciseIndex+1)
-  }
 
   // useEffect(() => {
   //   if (shuffleArray && finalArray) {

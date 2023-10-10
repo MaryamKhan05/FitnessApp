@@ -11,6 +11,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import colors from "../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "../FirebaseConfig";
 
 const ProfileCard = (props) => {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ const ProfileCard = (props) => {
     try {
       await AsyncStorage.clear();
       // navigation.navigate("Login");
-      console.log("cleared" )
+      console.log("cleared", auth.currentUser);
     } catch (e) {
       console.log("err", e);
     }
@@ -36,17 +37,20 @@ const ProfileCard = (props) => {
     auth
       .signOut()
       .then(() => {
-        clearDataHandler();
+        console.log("cleared", auth.currentUser )
+        navigation.navigate("Signin")
       })
       .catch((error) => alert(error.message));
+    // console.log('helloe hterrr ')
   };
   return (
     <TouchableOpacity
       style={styles.card}
       onPress={() => [
-        props.text == "Logout" ? handleSignout : null,
+        props.text == "Logout"
+          ? handleSignout()
+          : navigation.navigate(props.onPress),
         // props.onPress == "Equiments" ? deleteEquipmentHandler() : null,
-        navigation.navigate(props.onPress),
       ]}
     >
       <View style={{ width: "15%", alignItems: "center" }}>

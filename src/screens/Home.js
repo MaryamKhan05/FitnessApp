@@ -31,13 +31,12 @@ const Home = () => {
       updatedWorkoutArray.push(workout.upperBody);
     }
     if (lower) {
-      updatedWorkoutArray.push(workout.upperBody);
+      updatedWorkoutArray.push(workout.lowerBody);
     }
     if (core) {
-      updatedWorkoutArray.push(workout.upperBody);
+      updatedWorkoutArray.push(workout.core);
     }
     setList(updatedWorkoutArray);
-    // console.log("updatedWorkoutArray",updatedWorkoutArray.length)
     try {
       await AsyncStorage.setItem("Categories", JSON.stringify(list));
 

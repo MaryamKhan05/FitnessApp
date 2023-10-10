@@ -9,7 +9,8 @@ import {
   Modal,
   TextInput,
   Linking,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import Entypo from "react-native-vector-icons/Entypo";
@@ -54,20 +55,18 @@ const Profile = () => {
 
   const getUsername = async () => {
     setLoading(true);
-    const userId = auth.currentUser.uid; // Replace with the actual UID
+    const userId = auth.currentUser.uid;
     console.log("auth.currentUser.uid", auth.currentUser.uid);
-    // Fetch the user's data from Firestore
     const userDocRef = doc(db, "users", userId);
 
     try {
       const userDocSnapshot = await getDoc(userDocRef);
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
-        const userName = userData.username; // Extract the username
+        const userName = userData.username;
         console.log("User's Name::::::", userName);
         setUsername(userName);
         setLoading(false);
-        // Now you have the user's name, and you can use it as needed on this screen.
       } else {
         console.log("User document does not exist.");
         setLoading(false);
@@ -107,13 +106,13 @@ const Profile = () => {
       });
   };
 
-  if (loading) {
-    return (
-      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
-        <ActivityIndicator size={"large"} color={colors.primary} />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+  //       <ActivityIndicator size={"large"} color={colors.primary} />
+  //     </View>
+  //   );
+  // }
 
   return (
     <MainLyout heading="My Profile">
@@ -143,9 +142,14 @@ const Profile = () => {
             style={{ height: 70, width: 70 }}
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
-          {userName}
-        </Text>
+
+        {loading ? (
+          <ActivityIndicator size={"small"} color={colors.primary} />
+        ) : (
+          <Text style={{ fontSize: 16, fontFamily: "PoppinsBold" }}>
+            {userName}
+          </Text>
+        )}
       </View>
       <ProfileCard text="My Information" onPress="ProfileInfo">
         <FontAwesome
@@ -154,9 +158,6 @@ const Profile = () => {
           color={color}
           style={styles.icon}
         />
-      </ProfileCard>
-      <ProfileCard text="Update Password" onPress="UpdatePassword">
-        <Feather name="lock" size={size} color={color} style={styles.icon} />
       </ProfileCard>
 
       <TouchableOpacity
@@ -294,7 +295,7 @@ const Profile = () => {
         </View>
       </TouchableOpacity>
 
-      <ProfileCard text="Logout" onPress="Login">
+      <ProfileCard text="Logout" >
         <MaterialIcons
           name="logout"
           size={size}
@@ -448,63 +449,65 @@ const Profile = () => {
       {/* upgrade modal */}
       <View style={{ alignItems: "center", flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={upgradeModal}>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "flex-end",
-              backgroundColor: "#00000099",
-              flex: 1,
-            }}
-          >
-            <View style={styles.modalView}>
-              <Image
-                source={require("../../assets/ferioLabs/Premium.png")}
-                style={{
-                  height: "44%",
-                  width: "44%",
-                  alignSelf: "center",
-                  marginTop: 20,
-                }}
-                resizeMode="contain"
-              />
-              <Text style={styles.rateus}>Unlock More Features</Text>
+          <TouchableWithoutFeedback onPress={() => setUpgradeModal(false)}>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "flex-end",
+                backgroundColor: "#00000099",
+                flex: 1,
+              }}
+            >
+              <View style={styles.modalView}>
+                <Image
+                  source={require("../../assets/ferioLabs/Premium.png")}
+                  style={{
+                    height: "44%",
+                    width: "44%",
+                    alignSelf: "center",
+                    marginTop: 20,
+                  }}
+                  resizeMode="contain"
+                />
+                <Text style={styles.rateus}>Unlock More Features</Text>
 
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginVertical: 20,
-                }}
-              >
-                <Text
+                <View
                   style={{
-                    fontFamily: "PoppinsBold",
-                    fontSize: 43,
-                    color: "#E8A243",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginVertical: 20,
                   }}
                 >
-                  $10
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "PoppinsRrgular",
-                    fontSize: 14,
-                    color: "#E8A243",
-                  }}
-                >
-                  {" "}
-                  Per Month
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: "PoppinsBold",
+                      fontSize: 43,
+                      color: "#E8A243",
+                    }}
+                  >
+                    $10
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "PoppinsRrgular",
+                      fontSize: 14,
+                      color: "#E8A243",
+                    }}
+                  >
+                    {" "}
+                    Per Month
+                  </Text>
+                </View>
+                <TouchableOpacity>
+                  <ActiveButton title="Upgrade" width="70%" />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.underlinedText}>Details</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity>
-                <ActiveButton title="Upgrade" width="70%" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setUpgradeModal(false)}>
-                <Text style={styles.underlinedText}>Details</Text>
-              </TouchableOpacity>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </View>
     </MainLyout>
