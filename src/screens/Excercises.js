@@ -60,6 +60,8 @@ const Exercises = () => {
   //get values from storage
   useEffect(() => {
     getValuesFromStorage();
+
+    console.log("currentExerciseIndex", currentExerciseIndex);
   }, []);
   // get the day
 
@@ -82,12 +84,6 @@ const Exercises = () => {
   }, []);
 
   const getValuesFromStorage = async () => {
-    // const cat = await AsyncStorage.getItem("Category");
-    // // console.log("cat", cat[0]);
-    // const l = JSON.parse(cat);
-    // console.log("lllll", l);
-    // setCategory(l);
-
     const equi = await AsyncStorage.getItem("Equipments");
     const e = JSON.parse(equi);
     setEquipment(e);
@@ -96,6 +92,19 @@ const Exercises = () => {
   const mainFuntion = () => {
     let exerciseArray = [];
     console.log("equipment;;;;", equipment, "equipment");
+    let eq = [];
+    if (equipment.length > 0) {
+      eq = equipment;
+    } else {
+      eq = [""];
+    }
+    // Object.values(data?.exercises).filter(
+    //       (exercise) =>
+    //         group.includes(exercise.id) &&
+    //         exercise.equipmentRequired.some(
+    //           (equipmentType) => equipmentType === ""
+    //         )
+    //     );
     if (data.some((item) => item.type === "upperBody")) {
       let upper = data.filter((item) => item.type === "upperBody");
       let grp =
@@ -106,10 +115,15 @@ const Exercises = () => {
       let newArray = Object.values(upper[0]?.exercises).filter((exercise) =>
         grp.includes(exercise.id)
       );
-      const finalArray = newArray?.filter((exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        )
+
+      const finalArray = newArray?.filter(
+        (exercise) =>
+          exercise.equipmentRequired?.some((equipmentType) =>
+            eq.includes(equipmentType)
+          ) ||
+          exercise.equipmentOptions?.some((equipmentType) =>
+            eq.includes(equipmentType)
+          )
       );
       exerciseArray = [...exerciseArray, ...finalArray];
     }
@@ -125,8 +139,12 @@ const Exercises = () => {
       );
       // console.log("newArray", newArray,'llllllsssss');
       const finalArray = newArray?.filter((exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
+        exercise.equipmentRequired?.some(
+          (equipmentType) =>
+            eq.includes(equipmentType) ||
+            exercise.equipmentOptions?.some((equipmentType) =>
+              eq.includes(equipmentType)
+            )
         )
       );
       // console.log(finalArray.length, "final");
@@ -142,31 +160,34 @@ const Exercises = () => {
       let newArray = Object.values(core[0]?.exercises).filter((exercise) =>
         grp.includes(exercise.id)
       );
-      console.log("newArray", newArray,'llllllsssss');
+      // console.log("newArray", newArray.length, "coree");
       const finalArray = newArray?.filter((exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
+        exercise.equipmentRequired?.some(
+          (equipmentType) =>
+            eq.includes(equipmentType) ||
+            exercise.equipmentOptions?.some((equipmentType) =>
+              eq.includes(equipmentType)
+            )
         )
       );
-      console.log(finalArray.length, "final");
+      // console.log(finalArray.length, "final core");
       exerciseArray = [...exerciseArray, ...finalArray];
     }
 
-
-    console.log('exerciseArray',exerciseArray,'exerciseArray')
+    console.log("exerciseArray", exerciseArray, "exerciseArray");
+    shuffleArray(exerciseArray);
   };
 
   useEffect(() => {
     if (data && equipment) {
-      console.log("equipmentyyyyyyyy", equipment, "equipment");
       mainFuntion();
     }
   }, [data, equipment]);
 
-  function shuffleArray() {
-    let array = finalArray;
-    console.log(array, "oooo___ooooo");
-    // console.log("array before", array.length);
+  function shuffleArray(array) {
+    // let array = finalArray;
+    // console.log(array, "oooo___ooooo");
+    console.log("array before", array.length);
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -175,10 +196,54 @@ const Exercises = () => {
     // console.log("array afetr", array);
     // console.log("buhahahr", array.length);
     setShuffledArray(array);
-    setExName(array[currentExerciseIndex]?.name);
-    setGif(array[currentExerciseIndex]?.asset);
+    // setExName(array[currentExerciseIndex]?.name);
+    // setGif(array[currentExerciseIndex]?.asset);
     // setCurrentExerciseIndex(currentExerciseIndex+1)
   }
+
+  useEffect(() => {
+    if (shuffledArray) {
+      setLoading(true);
+      const randomExercise = shuffledArray[currentExerciseIndex];
+      console.log("randomExercise", currentExerciseIndex);
+      setRandomExercise(randomExercise);
+    }
+    if (randomExercise?.variations?.available == true)
+      console.log("variations available");
+    if (
+      randomExercise?.equipmentRequired?.some((item) =>
+        equipment.includes(item)
+      ) ||
+      randomExercise?.equipmentOptions?.some((item) => equipment.includes(item))
+    ) {
+      console.log("helloe");
+      const variations = randomExercise?.variations;
+      const numberOfVariations = Object.keys(variations).length;
+      const randomIndex = Math.floor(Math.random() * numberOfVariations);
+      if (randomIndex !== 0) {
+        const variationIds = Object.keys(variations);
+        const selectedVariationId = variationIds[randomIndex];
+        setExercise(variations[selectedVariationId]);
+        setExName(variations[selectedVariationId].name);
+        setGif(variations[selectedVariationId].asset);
+        // setCurrentExerciseIndex(currentExerciseIndex + 1);
+        console.log(
+          "selectedVariationIdlllllljjjjjssshhs",
+          selectedVariationId
+        );
+      } else {
+        console.log("randomIndex is 0");
+      }
+      setLoading(false);
+    } else {
+      setExercise(randomExercise);
+      setExName(randomExercise?.name);
+      // setCurrentExerciseIndex(currentExerciseIndex + 1);
+      setGif(randomExercise?.asset);
+
+      setLoading(false);
+    }
+  }, [shuffledArray]);
 
   // useEffect(() => {
   //   if (data && group && equipment.length > 0) {
@@ -308,71 +373,41 @@ const Exercises = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (shuffleArray && finalArray) {
-  //     setLoading(true);
-  //     const randomExercise = finalArray[0];
-  //     // console.log("randomExercise", randomExercise);
-  //     setRandomExercise(randomExercise);
-  //   }
-  //   if (
-  //     randomExercise?.variations?.available == true &&
-  //     randomExercise?.equipmentRequired == equipment
-  //   ) {
-  //     const variations = randomExercise?.variations;
-  //     const numberOfVariations = Object.keys(variations).length;
-  //     const randomIndex = Math.floor(Math.random() * numberOfVariations);
-  //     if (randomIndex !== 0) {
-  //       const variationIds = Object.keys(variations);
-  //       const selectedVariationId = variationIds[randomIndex];
-  //       setExercise(variations[selectedVariationId]);
-  //       // console.log(
-  //       //   "selectedVariationIdlllllljjjjjssshhs",
-  //       //   selectedVariationId
-  //       // );
-  //     }
-  //     setLoading(false);
-  //   } else {
-  //     setExercise(randomExercise);
-  //     setLoading(false);
-  //   }
-  // }, [shuffledArray, randomExercise]);
-
-  // useEffect(() => {
-  //   if (startTimer == true) {
-  //     const countdown = setInterval(() => {
-  //       if (secondsRemaining > 0) {
-  //         setSecondsRemaining(secondsRemaining - 1);
-  //       } else if (secondsRemaining == 0) {
-  //         // setCount(count + 1);
-  //         if (set < 3) {
-  //           setText("Next Set");
-  //         }
-  //         setTimer(false);
-  //         setRestModal(true);
-  //         setRestTimer(true);
-  //         chingHandler();
-  //       }
-  //     }, 1000);
-  //     return () => clearInterval(countdown);
-  //   }
-  // }, [secondsRemaining, startTimer]);
+  useEffect(() => {
+    if (startTimer == true) {
+      const countdown = setInterval(() => {
+        if (secondsRemaining > 0) {
+          setSecondsRemaining(secondsRemaining - 1);
+        } else if (secondsRemaining == 0) {
+          // setCount(count + 1);
+          if (set < 3) {
+            setText("Next Set");
+          }
+          setTimer(false);
+          setRestModal(true);
+          setRestTimer(true);
+          chingHandler();
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }
+  }, [secondsRemaining, startTimer]);
 
   // rest timer
-  // useEffect(() => {
-  //   if (restTimer) {
-  //     const countdown = setInterval(() => {
-  //       if (rest > 0) {
-  //         setRest(rest - 1);
-  //       } else if (rest == 0) {
-  //         setRestModal(false);
-  //         setRestTimer(false);
-  //         setRest(15);
-  //       }
-  //     }, 1000);
-  //     return () => clearInterval(countdown);
-  //   }
-  // }, [secondsRemaining, rest, restTimer]);
+  useEffect(() => {
+    if (restTimer) {
+      const countdown = setInterval(() => {
+        if (rest > 0) {
+          setRest(rest - 1);
+        } else if (rest == 0) {
+          setRestModal(false);
+          setRestTimer(false);
+          setRest(15);
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }
+  }, [secondsRemaining, rest, restTimer]);
 
   const minutes = Math.floor(secondsRemaining / 60);
   const seconds = secondsRemaining % 60;
@@ -599,7 +634,7 @@ const Exercises = () => {
                 "0"
               )} ${String(restSec).padStart(2, "0")}`}</Text>
             ) : (
-              <Text style={styles.time}>01 00</Text>
+              <Text style={styles.time}>00 10</Text>
             )}
 
             {/* {restTimer && (

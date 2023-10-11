@@ -30,22 +30,48 @@ const AppNav = () => {
   useEffect(() => {
     getTokenHandler();
 
+    // const unsubscribe = auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //     // User is signed in
+    //     // Navigate to your app's main screen
+    //     console.log("user is");
+    //     setUser(true);
+    //     setLoading(false);
+    //   } else {
+    //     // User is not signed in
+    //     // Show the login screen
+    //     console.log("user no user");
+    //     setUser(false);
+    //     setLoading(false);
+    //   }
+    // });
+
+    // return () => unsubscribe();
+
+
+
+
+
+
+
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        // User is signed in
-        // Navigate to your app's main screen
-        console.log("user is");
-        setUser(true);
-        setLoading(false);
+        // User is signed in, check if email is verified
+        if (user.emailVerified) {
+          // Email is verified, navigate to your app's main screen
+          setUser(true);
+        } else {
+          // Email is not verified, restrict to the signup screen
+          setUser(false);
+        }
       } else {
-        // User is not signed in
-        // Show the login screen
-        console.log("user no user");
+        // User is not signed in, show the login screen
         setUser(false);
-        setLoading(false);
       }
+      setLoading(false);
     });
-
+  
     return () => unsubscribe();
   }, []);
 

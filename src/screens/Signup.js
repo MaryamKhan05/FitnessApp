@@ -31,6 +31,7 @@ import { auth, db } from "../FirebaseConfig";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -167,12 +168,6 @@ const Signup = () => {
 
         // Send verification email
         await sendEmailVerification(user);
-        alert(
-          "Verification email has been sent. Please check your email to verify your account."
-        );
-        // Set user data
-        // setToken(userCredential._tokenResponse.idToken);
-        // setUserId(userCredential.user.providerData.uid);
 
         const username = trimmedName;
         const userId = user.uid;
@@ -180,6 +175,14 @@ const Signup = () => {
 
         const userDocRef = doc(db, "users", userId);
         await setDoc(userDocRef, { username, mail });
+        await signOut(auth);
+        alert(
+          "Verification email has been sent. Please check your email to verify your account."
+        );
+        // Set user data
+        // setToken(userCredential._tokenResponse.idToken);
+        // setUserId(userCredential.user.providerData.uid);
+
         setLoading(false);
 
         // Notify the user that a verification email has been sent

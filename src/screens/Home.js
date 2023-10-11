@@ -36,11 +36,17 @@ const Home = () => {
     if (core) {
       updatedWorkoutArray.push(workout.core);
     }
+
+    if (!upper && !lower && !core) {
+      updatedWorkoutArray.push(workout.upperBody);
+      updatedWorkoutArray.push(workout.lowerBody);
+      updatedWorkoutArray.push(workout.core);
+    }
     setList(updatedWorkoutArray);
     try {
       await AsyncStorage.setItem("Categories", JSON.stringify(list));
 
-      navigation.navigate("Exercises",{updatedWorkoutArray});
+      navigation.navigate("Exercises", { updatedWorkoutArray });
     } catch (e) {
       console.log("error saving category to storage", e);
     }
