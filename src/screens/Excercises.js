@@ -47,7 +47,7 @@ const Exercises = () => {
   const [randomExercise, setRandomExercise] = useState();
   const [nextEx, setNextEx] = useState(false);
   const [restModal, setRestModal] = useState(false);
-  const [text, setText] = useState("Start Exercise");
+  const [text, setText] = useState("Start");
   const [calledOnce, setCalledOnce] = useState(false);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   let exerciseArray = [];
@@ -381,7 +381,7 @@ const Exercises = () => {
         } else if (secondsRemaining == 0) {
           // setCount(count + 1);
           if (set < 3) {
-            setText("Next Set");
+            setText("Next");
           }
           setTimer(false);
           setRestModal(true);
@@ -523,7 +523,7 @@ const Exercises = () => {
 
   const texthandler = () => {
     if (set < 3) {
-      if (text == "Start Exercise") {
+      if (text == "Start") {
         setTimer(true);
         setText("Rest");
         setSecondsRemaining(10);
@@ -531,31 +531,31 @@ const Exercises = () => {
       } else if (text == "Rest") {
         setRestTimer(true);
         setRest(15);
-        setText("Next Set");
+        setText("Next");
         setTimer(false);
-      } else if (text == "Next Set") {
+      } else if (text == "Next") {
         setTimer(true);
         setText("Rest");
         setSecondsRemaining(10);
         setSet(set + 1);
         setRest(false);
       }
-    } else if (text == "Next Exercise") {
-      setText("Start Exercise");
+    } else if (text == "Next ") {
+      setText("Start ");
       setSet(1);
       setRest(false);
       setSecondsRemaining(10);
       setTimer(false);
       nextHandler();
     } else {
-      setText("Next Exercise");
+      setText("Next ");
       setSet(1);
       setRest(false);
       shuffleAndShowExercise();
       setSecondsRemaining(10);
       nextHandler();
       setTimer(false);
-      setText("Start Exercise");
+      setText("Start ");
     }
   };
 
