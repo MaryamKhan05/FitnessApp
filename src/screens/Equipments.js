@@ -89,9 +89,9 @@ const Equiments = () => {
     }
   };
   const renderItem = ({ item }) => {
-    const isItemSelected = selectedArray.includes(item.name);
-    console.log(selectedArray.includes(item.name));
-    console.log(isItemSelected);
+    // const isItemSelected = selectedArray.includes(item.name);
+    // console.log(selectedArray.includes(item.name));
+    // console.log(isItemSelected);
 
     return (
       <TouchableOpacity
