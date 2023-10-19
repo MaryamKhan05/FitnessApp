@@ -30,23 +30,26 @@ const Exercises = () => {
   let exerciseArray = [];
 
   useEffect(() => {
-    let workout = route.params?.updatedWorkoutArray;
-
-    if (workout.some((item) => item.type === "upperBody")) {
-      console.log("yes type upper exists");
-      let upperBodyData = workout.filter((item) => item.type === "upperBody");
-      checkUpperStorageHandler(upperBodyData);
+    async function getCategory() {
+      let workout = route.params?.updatedWorkoutArray;
+      if (workout.some((item) => item.type === "upperBody")) {
+        console.log("yes type upper exists");
+        let upperBodyData = workout.filter((item) => item.type === "upperBody");
+      await  checkUpperStorageHandler(upperBodyData);
+      }
+      if (workout.some((item) => item.type === "lowerBody")) {
+        console.log("yes type lower exists");
+        let lowerBodyData = workout.filter((item) => item.type === "lowerBody");
+      await  checkLowerStorageHandler(lowerBodyData);
+      }
+      if (workout.some((item) => item.type === "core")) {
+        console.log("yes type core exists");
+        let coreData = workout.filter((item) => item.type === "core");
+       await checkCoreStorageHandler(coreData);
+      }
     }
-    if (workout.some((item) => item.type === "lowerBody")) {
-      console.log("yes type lower exists");
-      let lowerBodyData = workout.filter((item) => item.type === "lowerBody");
-      checkLowerStorageHandler(lowerBodyData);
-    }
-    if (workout.some((item) => item.type === "core")) {
-      console.log("yes type core exists");
-      let coreData = workout.filter((item) => item.type === "core");
-      checkCoreStorageHandler(coreData);
-    }
+    getCategory();
+    console.log("exercise array starts", exerciseArray, "exercise aray ends");
   }, []);
 
   //upper storage check
@@ -61,12 +64,12 @@ const Exercises = () => {
         console.log(groupId, "group id is 1");
         group = data[0].groups[2].ex;
         await AsyncStorage.setItem("uGroup", `${2}`);
-        upperMainFunction(group);
+        upperMainFunction(group, data);
       } else {
         console.log(groupId, "group id is 2");
         group = data[0].groups[1].ex;
         await AsyncStorage.setItem("uGroup", `${1}`);
-        upperMainFunction(group);
+        upperMainFunction(group, data);
       }
     } else {
       console.log("upper Items don't exist", data[0].groups);
@@ -82,10 +85,10 @@ const Exercises = () => {
       await AsyncStorage.setItem("uGroup", randomGroupKey);
     }
   };
-  const upperMainFunction = async (group) => {
+  const upperMainFunction = async (group, data) => {
     let equipment = await AsyncStorage.getItem("Equipments");
-    // console.log(equipment,'---<<<')
-    let newArray = Object.values(upperData[0]?.exercises).filter((exercise) =>
+    console.log(equipment, "---<<<");
+    let newArray = Object.values(data[0]?.exercises).filter((exercise) =>
       group.includes(exercise.id)
     );
     console.log(newArray.length, "<<<<<<<=====new array");
@@ -99,6 +102,7 @@ const Exercises = () => {
         )
     );
     console.log(finalArray.length, "<----final array");
+    exerciseArray = [...exerciseArray, ...finalArray];
   };
 
   //lower storage check
@@ -151,6 +155,7 @@ const Exercises = () => {
         )
     );
     console.log(finalArray.length, "<----lower final array");
+    exerciseArray = [...exerciseArray, ...finalArray];
   };
 
   //core storage check
@@ -204,6 +209,7 @@ const Exercises = () => {
         )
     );
     console.log(finalArray.length, "<----core final array");
+    exerciseArray = [...exerciseArray, ...finalArray];
   };
   return <MainLyout heading="Workout"></MainLyout>;
 };
