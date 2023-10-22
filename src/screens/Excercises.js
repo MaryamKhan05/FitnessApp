@@ -26,192 +26,100 @@ const Exercises = () => {
   const [upperData, setUpperData] = useState();
   const [lowerData, setLowerData] = useState();
   const [coreData, setCoreData] = useState();
-
+  const [workoutData, setWorkoutData] = useState();
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [equipment, setEquipment] = useState();
+  const [exercise, setExercise] = useState();
+  const [exName, setExName] = useState();
+  const [gif, setGif] = useState();
   let exerciseArray = [];
+  useEffect(() => {
+    if (route.params && equipment) {
+      shuffleHandler();
+    }
+  }, [route.params, equipment]);
 
   useEffect(() => {
-    async function getCategory() {
-      let workout = route.params?.updatedWorkoutArray;
-      if (workout.some((item) => item.type === "upperBody")) {
-        console.log("yes type upper exists");
-        let upperBodyData = workout.filter((item) => item.type === "upperBody");
-      await  checkUpperStorageHandler(upperBodyData);
-      }
-      if (workout.some((item) => item.type === "lowerBody")) {
-        console.log("yes type lower exists");
-        let lowerBodyData = workout.filter((item) => item.type === "lowerBody");
-      await  checkLowerStorageHandler(lowerBodyData);
-      }
-      if (workout.some((item) => item.type === "core")) {
-        console.log("yes type core exists");
-        let coreData = workout.filter((item) => item.type === "core");
-       await checkCoreStorageHandler(coreData);
-      }
-    }
-    getCategory();
-    console.log("exercise array starts", exerciseArray, "exercise aray ends");
+    getEquipment();
   }, []);
 
-  //upper storage check
-  const checkUpperStorageHandler = async (data) => {
-    setUpperData(data);
-    const groupId = await AsyncStorage.getItem("uGroup");
+  const shuffleHandler = () => {
+    //shuffle the array
+    let array = route.params?.updatedWorkoutArray;
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
 
-    if (groupId !== null) {
-      console.log("upper Item exists:", groupId);
-      let group;
-      if (groupId == 1) {
-        console.log(groupId, "group id is 1");
-        group = data[0].groups[2].ex;
-        await AsyncStorage.setItem("uGroup", `${2}`);
-        upperMainFunction(group, data);
+    // select one exercise randomly
+    let randomExercise = array[currentExerciseIndex];
+
+    if (randomExercise?.variations?.available == true)
+      console.log("variations available");
+    if (
+      randomExercise?.equipmentRequired?.some((item) =>
+        equipment.includes(item)
+      ) ||
+      randomExercise?.equipmentOptions?.some((item) => equipment.includes(item))
+    ) {
+      console.log("helloe");
+      const variations = randomExercise?.variations;
+      const numberOfVariations = Object.keys(variations).length;
+      console.log(numberOfVariations);
+      let randomIndex = Math.floor(Math.random() * numberOfVariations);
+      console.log(randomIndex, "random i");
+      if (randomIndex !== 0) {
+        const variationIds = Object.keys(variations);
+        const selectedVariationId = variationIds[randomIndex];
+        setExercise(variations[selectedVariationId]);
+        setExName(variations[selectedVariationId].name);
+        setGif(variations[selectedVariationId].asset);
+        // setCurrentExerciseIndex(currentExerciseIndex + 1);
+        console.log(
+          "selectedVariationIdlllllljjjjjssshhs",
+          selectedVariationId
+        );
       } else {
-        console.log(groupId, "group id is 2");
-        group = data[0].groups[1].ex;
-        await AsyncStorage.setItem("uGroup", `${1}`);
-        upperMainFunction(group, data);
+        console.log("randomIndex is 0");
+        setExercise(randomExercise);
+        setExName(randomExercise.name);
+        setGif(randomExercise.asset);
+        console.log(randomExercise?.name);
       }
+      // setLoading(false);
     } else {
-      console.log("upper Items don't exist", data[0].groups);
-      const groupKeys = Object.keys(data[0].groups);
+      setExercise(randomExercise);
+      setExName(randomExercise?.name);
+      // setCurrentExerciseIndex(currentExerciseIndex + 1);
+      setGif(randomExercise?.asset);
 
-      for (let i = groupKeys.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
-      }
-
-      const randomGroupKey = groupKeys[0];
-      console.log("Random group selected:", randomGroupKey);
-      await AsyncStorage.setItem("uGroup", randomGroupKey);
+      // setLoading(false);
     }
   };
-  const upperMainFunction = async (group, data) => {
+  const getEquipment = async () => {
     let equipment = await AsyncStorage.getItem("Equipments");
-    console.log(equipment, "---<<<");
-    let newArray = Object.values(data[0]?.exercises).filter((exercise) =>
-      group.includes(exercise.id)
-    );
-    console.log(newArray.length, "<<<<<<<=====new array");
-    const finalArray = newArray?.filter(
-      (exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        ) ||
-        exercise.equipmentOptions?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        )
-    );
-    console.log(finalArray.length, "<----final array");
-    exerciseArray = [...exerciseArray, ...finalArray];
+    setEquipment(equipment);
   };
+  return (
+    <MainLyout heading="Workout">
+      <View>
+        <Text style={{ fontSize: 24, fontWeight: "600" }}>
+          {exercise?.name}
+        </Text>
+      </View>
+      <Image
+        source={gif}
+        style={{ height: 120, width: 120, padding: 10, margin: 20 }}
+      />
 
-  //lower storage check
-  const checkLowerStorageHandler = async (data) => {
-    setLowerData(data);
-    const groupId = await AsyncStorage.getItem("lGroup");
-
-    if (groupId !== null) {
-      console.log(" lower Item exists:", groupId);
-      let group;
-      if (groupId == 1) {
-        console.log(groupId, " lower group id is 1");
-        group = data[0].groups[2].ex;
-        await AsyncStorage.setItem("lGroup", `${2}`);
-        lowerMainFunction(group);
-      } else {
-        console.log(groupId, "lower group id is 2");
-        group = data[0].groups[1].ex;
-        await AsyncStorage.setItem("lGroup", `${1}`);
-        lowerMainFunction(group);
-      }
-    } else {
-      console.log("lower Items don't exist", data[0].groups);
-      const groupKeys = Object.keys(data[0].groups);
-
-      for (let i = groupKeys.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
-      }
-
-      const randomGroupKey = groupKeys[0];
-      console.log("lower Random group selected:", randomGroupKey);
-      await AsyncStorage.setItem("lGroup", randomGroupKey);
-    }
-  };
-
-  const lowerMainFunction = async (group) => {
-    let equipment = await AsyncStorage.getItem("Equipments");
-    let newArray = Object.values(lowerData[0]?.exercises).filter((exercise) =>
-      group.includes(exercise.id)
-    );
-    console.log(newArray.length, "<<<<<<<=====lower new array");
-    const finalArray = newArray?.filter(
-      (exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        ) ||
-        exercise.equipmentOptions?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        )
-    );
-    console.log(finalArray.length, "<----lower final array");
-    exerciseArray = [...exerciseArray, ...finalArray];
-  };
-
-  //core storage check
-  const checkCoreStorageHandler = async (data) => {
-    setUpperData(data);
-    const groupId = await AsyncStorage.getItem("cGroup");
-
-    if (groupId !== null) {
-      console.log("core Item exists:", groupId);
-      let group;
-      if (groupId == 1) {
-        console.log(groupId, "core group id is 1");
-        group = data[0].groups[2].ex;
-        await AsyncStorage.setItem("cGroup", `${2}`);
-        coreMainFunction(group);
-      } else {
-        console.log(groupId, "core group id is 2");
-        group = data[0].groups[1].ex;
-        await AsyncStorage.setItem("cGroup", `${1}`);
-        coreMainFunction(group);
-      }
-    } else {
-      console.log("core Items don't exist", data[0].groups);
-      const groupKeys = Object.keys(data[0].groups);
-
-      for (let i = groupKeys.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
-      }
-
-      const randomGroupKey = groupKeys[0];
-      console.log("core Random group selected:", randomGroupKey);
-      await AsyncStorage.setItem("cGroup", randomGroupKey);
-    }
-  };
-  const coreMainFunction = async (group) => {
-    let equipment = await AsyncStorage.getItem("Equipments");
-
-    console.log(equipment);
-    let newArray = Object.values(coreData[0]?.exercises).filter((exercise) =>
-      group.includes(exercise.id)
-    );
-    console.log(newArray.length, "<<<<<<<=====core new array");
-    const finalArray = newArray?.filter(
-      (exercise) =>
-        exercise.equipmentRequired?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        ) ||
-        exercise.equipmentOptions?.some((equipmentType) =>
-          equipment.includes(equipmentType)
-        )
-    );
-    console.log(finalArray.length, "<----core final array");
-    exerciseArray = [...exerciseArray, ...finalArray];
-  };
-  return <MainLyout heading="Workout"></MainLyout>;
+      <TouchableOpacity
+        style={{ backgroundColor: colors.primary, padding: 10 }}
+        onPress={shuffleHandler}
+      >
+        <Text style={{ color: "white" }}>Next</Text>
+      </TouchableOpacity>
+    </MainLyout>
+  );
 };
 
 const styles = StyleSheet.create({

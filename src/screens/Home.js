@@ -28,13 +28,289 @@ const Home = () => {
   const handleNext = async () => {
     let updatedWorkoutArray = [];
     if (upper) {
-      updatedWorkoutArray.push(workout.upperBody);
+      // updatedWorkoutArray.push(workout.upperBody);
+
+      const groupId = await AsyncStorage.getItem("uGroup");
+
+      if (groupId !== null) {
+        console.log("upper Item exists:", groupId);
+        let group;
+        if (groupId == 1) {
+          console.log(groupId, "group id is 1");
+          console.log(workout.upperBody, "...");
+          group = workout.upperBody?.groups[2].ex;
+          await AsyncStorage.setItem("uGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          console.log(equipment, "---<<<");
+          let newArray = Object.values(workout.upperBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          console.log(newArray.length, "<<<<<<<=====new array");
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          console.log(finalArray.length, "<----final array");
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          console.log(groupId, "group id is 2");
+          group = workout.upperBody?.groups[1].ex;
+          await AsyncStorage.setItem("uGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          console.log(equipment, "---<<<");
+          let newArray = Object.values(workout.upperBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          console.log(newArray.length, "<<<<<<<=====new array");
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          console.log(finalArray.length, "<----final array");
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      } else {
+        console.log("upper Items don't exist", workout.upperBody?.groups);
+        const groupKeys = Object.keys(workout.upperBody?.groups);
+
+        for (let i = groupKeys.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
+        }
+
+        const randomGroupKey = groupKeys[0];
+        console.log("Random group selected:", randomGroupKey);
+        await AsyncStorage.setItem("uGroup", randomGroupKey);
+        let group;
+        if (randomGroupKey == 1) {
+          group = workout.lowerBody?.groups[1].ex;
+          await AsyncStorage.setItem("lGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          group = workout.lowerBody?.groups[2].ex;
+          await AsyncStorage.setItem("lGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      }
     }
     if (lower) {
-      updatedWorkoutArray.push(workout.lowerBody);
+      const groupId = await AsyncStorage.getItem("lGroup");
+
+      if (groupId !== null) {
+        console.log("lower Item exists:", groupId);
+        let group;
+        if (groupId == 1) {
+          group = workout.lowerBody?.groups[2].ex;
+          await AsyncStorage.setItem("lGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          group = workout.lowerBody?.groups[1].ex;
+          await AsyncStorage.setItem("lGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      } else {
+        //console.log("upper Items don't exist", workout.lowerBody.groups);
+        const groupKeys = Object.keys(workout.lowerBody?.groups);
+
+        for (let i = groupKeys.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
+        }
+
+        const randomGroupKey = groupKeys[0];
+        console.log("Random group selected:", randomGroupKey);
+        await AsyncStorage.setItem("lGroup", randomGroupKey);
+        let group;
+        if (randomGroupKey == 1) {
+          group = workout.lowerBody?.groups[1].ex;
+          await AsyncStorage.setItem("lGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          group = workout.lowerBody?.groups[2].ex;
+          await AsyncStorage.setItem("lGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      }
     }
     if (core) {
-      updatedWorkoutArray.push(workout.core);
+      const groupId = await AsyncStorage.getItem("cGroup");
+
+      if (groupId !== null) {
+        console.log("lower Item exists:", groupId);
+        let group;
+        if (groupId == 1) {
+          group = workout.core?.groups[2].ex;
+          await AsyncStorage.setItem("cGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.core?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          group = workout.core?.groups[1].ex;
+          await AsyncStorage.setItem("cGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.core?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      } else {
+        //console.log("upper Items don't exist", workout.lowerBody.groups);
+        const groupKeys = Object.keys(workout.core?.groups);
+
+        for (let i = groupKeys.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [groupKeys[i], groupKeys[j]] = [groupKeys[j], groupKeys[i]];
+        }
+
+        const randomGroupKey = groupKeys[0];
+        console.log("Random group selected:", randomGroupKey);
+        await AsyncStorage.setItem("cGroup", randomGroupKey);
+
+        let group;
+        if (randomGroupKey == 1) {
+          group = workout.lowerBody?.groups[1].ex;
+          await AsyncStorage.setItem("lGroup", `${1}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        } else {
+          group = workout.lowerBody?.groups[2].ex;
+          await AsyncStorage.setItem("lGroup", `${2}`);
+          let equipment = await AsyncStorage.getItem("Equipments");
+          let newArray = Object.values(workout.lowerBody?.exercises).filter(
+            (exercise) => group.includes(exercise.id)
+          );
+          const finalArray = newArray?.filter(
+            (exercise) =>
+              exercise.equipmentRequired?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              ) ||
+              exercise.equipmentOptions?.some((equipmentType) =>
+                equipment.includes(equipmentType)
+              )
+          );
+          updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
+        }
+      }
     }
 
     if (!upper && !lower && !core) {
@@ -44,7 +320,7 @@ const Home = () => {
     }
     setList(updatedWorkoutArray);
     try {
-      await AsyncStorage.setItem("Categories", JSON.stringify(list));
+      // await AsyncStorage.setItem("Categories", JSON.stringify(list));
 
       navigation.navigate("Exercises", { updatedWorkoutArray });
     } catch (e) {
