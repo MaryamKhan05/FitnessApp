@@ -50,6 +50,7 @@ const Equiments = () => {
 
     try {
       await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
+      console.log("equipment saved to storage");
       navigation.navigate("Home");
     } catch (e) {
       console.log("error saving equipments to storage");

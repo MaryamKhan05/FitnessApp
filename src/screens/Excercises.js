@@ -23,6 +23,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Exercises = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const [upperData, setUpperData] = useState();
   const [lowerData, setLowerData] = useState();
   const [coreData, setCoreData] = useState();
@@ -34,7 +35,6 @@ const Exercises = () => {
   const [exName, setExName] = useState();
   const [gif, setGif] = useState();
 
-  const [count, setCount] = useState(0);
   const [startTimer, setTimer] = useState(false);
   const [rest, setRest] = useState(15);
   const [restTimer, setRestTimer] = useState(false);
@@ -47,6 +47,8 @@ const Exercises = () => {
   const [setNumber, setSetNumber] = useState(1);
   const [secondsRemaining, setSecondsRemaining] = useState(10);
   const [startButton, setStartButton] = useState(true);
+  const [count, setCount] = useState(0);
+  const [workout, setWorkout] = useState();
 
   let exerciseArray = [];
   useEffect(() => {
@@ -59,6 +61,11 @@ const Exercises = () => {
     getEquipment();
   }, []);
 
+  const getEquipment = async () => {
+    let equipment = await AsyncStorage.getItem("Equipments");
+    setEquipment(equipment);
+  };
+
   const shuffleHandler = () => {
     //shuffle the array
     let array = route.params?.updatedWorkoutArray;
@@ -66,6 +73,8 @@ const Exercises = () => {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+
+    setWorkout(array);
 
     // select one exercise randomly
     let randomExercise = array[currentExerciseIndex];
@@ -112,11 +121,16 @@ const Exercises = () => {
       // setLoading(false);
     }
   };
-  const getEquipment = async () => {
-    let equipment = await AsyncStorage.getItem("Equipments");
-    setEquipment(equipment);
-  };
 
+  const nextExerciseHandler = () => {
+    if (currentExerciseIndex < workout.length-1) {
+      setSet(1);
+      setCount(0);
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    } else {
+      navigation.navigate("Completion");
+    }
+  };
   useEffect(() => {
     if (startTimer == true) {
       const countdown = setInterval(() => {
@@ -215,8 +229,11 @@ const Exercises = () => {
   };
 
   const texthandler = () => {
+    console.log("start pressed 1", text);
     if (set < 3) {
+      console.log("start pressed 2",text);
       if (text == "Start") {
+        console.log("start pressed 3",text);
         setTimer(true);
         setText("Rest");
         setSecondsRemaining(10);
@@ -233,44 +250,29 @@ const Exercises = () => {
         setSet(set + 1);
         setRest(false);
       }
-    } else if (text == "Next ") {
-      setText("Start ");
+    } else if (text == "Next") {
+      setText("Start");
       setSet(1);
       setRest(false);
       setSecondsRemaining(10);
       setTimer(false);
       // nextHandler();
+      nextExerciseHandler();
     } else {
-      setText("Next ");
+      setText("Next");
       setSet(1);
       setRest(false);
-      shuffleAndShowExercise();
+      // shuffleAndShowExercise();
+      nextExerciseHandler();
       setSecondsRemaining(10);
       // nextHandler();
       setTimer(false);
-      setText("Start ");
+      setText("Start");
     }
   };
 
   return (
     <MainLyout heading="Workout">
-      {/* <View>
-        <Text style={{ fontSize: 24, fontWeight: "600" }}>
-          {exercise?.name}
-        </Text>
-      </View>
-      <Image
-        source={gif}
-        style={{ height: 120, width: 120, padding: 10, margin: 20 }}
-      />
-
-      <TouchableOpacity
-        style={{ backgroundColor: colors.primary, padding: 10 }}
-        onPress={shuffleHandler}
-      >
-        <Text style={{ color: "white" }}>Next</Text>
-      </TouchableOpacity> */}
-
       <Card>
         <View style={{ alignItems: "center" }}>
           <View
@@ -283,7 +285,7 @@ const Exercises = () => {
             <Text
               style={{ fontSize: 18, fontFamily: "PoppinsSemi", margin: 5 }}
             >
-              {exName}
+              {workout && workout[currentExerciseIndex]?.name}
               {/* {exerciseArray[currentExerciseIndex]?.name} */}
             </Text>
             <TouchableOpacity
@@ -295,18 +297,10 @@ const Exercises = () => {
           </View>
           <Text style={{ fontSize: 14, fontFamily: "PoppinsBold", margin: 5 }}>
             {/* Sets { set==3? set-1 :set} */}
-            {/* Set {set} */}
+            Set {set}
           </Text>
 
           <Divider backgroundColor="#00000029" width="90%" />
-          {/* <View style={styles.row}>
-            <Text style={styles.number}>{exercise?.reps} </Text>
-            <Text style={styles.text}>Reps</Text>
-          </View> */}
-          {/* <View style={styles.row}>
-            <Text style={styles.number}>2 min</Text>
-            <Text style={styles.text}>Rest</Text>
-          </View> */}
           <View
             style={{
               flexDirection: "row",
@@ -339,16 +333,6 @@ const Exercises = () => {
             ) : (
               <Text style={styles.time}>00 10</Text>
             )}
-
-            {/* {restTimer && (
-              <Text style={styles.time}>{`${String(restMin).padStart(
-                2,
-                "0"
-              )} ${String(restSec).padStart(2, "0")}`}</Text>
-            )} */}
-            {/* {!startTimer && !restTimer && (
-              <Text style={styles.time}>01 00</Text>
-            )} */}
           </View>
         </View>
 
@@ -403,7 +387,7 @@ const Exercises = () => {
                     textAlign: "center",
                   }}
                 >
-                  {exName}
+                  {workout && workout[currentExerciseIndex]?.name}
                 </Text>
               </View>
               <TouchableOpacity
@@ -414,7 +398,7 @@ const Exercises = () => {
               </TouchableOpacity>
             </View>
             <Image
-              source={gif}
+              source={workout && workout[currentExerciseIndex]?.asset}
               style={{ height: 288, width: 288, alignSelf: "center" }}
               resizeMode="contain"
             />

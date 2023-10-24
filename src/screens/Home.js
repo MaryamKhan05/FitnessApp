@@ -27,6 +27,7 @@ const Home = () => {
 
   const handleNext = async () => {
     let updatedWorkoutArray = [];
+    let equipment = await AsyncStorage.getItem("Equipments");
     if (upper) {
       // updatedWorkoutArray.push(workout.upperBody);
 
@@ -40,8 +41,6 @@ const Home = () => {
           console.log(workout.upperBody, "...");
           group = workout.upperBody?.groups[2].ex;
           await AsyncStorage.setItem("uGroup", `${2}`);
-          // let equipment = await AsyncStorage.getItem("Equipments");
-          console.log(equipment, "---<<<");
           let newArray = Object.values(workout.upperBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -61,8 +60,6 @@ const Home = () => {
           console.log(groupId, "group id is 2");
           group = workout.upperBody?.groups[1].ex;
           await AsyncStorage.setItem("uGroup", `${1}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
-          console.log(equipment, "---<<<");
           let newArray = Object.values(workout.upperBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -95,7 +92,7 @@ const Home = () => {
         if (randomGroupKey == 1) {
           group = workout.lowerBody?.groups[1].ex;
           await AsyncStorage.setItem("lGroup", `${1}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
+
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -112,7 +109,6 @@ const Home = () => {
         } else {
           group = workout.lowerBody?.groups[2].ex;
           await AsyncStorage.setItem("lGroup", `${2}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -186,7 +182,6 @@ const Home = () => {
         if (randomGroupKey == 1) {
           group = workout.lowerBody?.groups[1].ex;
           await AsyncStorage.setItem("lGroup", `${1}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -203,7 +198,6 @@ const Home = () => {
         } else {
           group = workout.lowerBody?.groups[2].ex;
           await AsyncStorage.setItem("lGroup", `${2}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -278,7 +272,6 @@ const Home = () => {
         if (randomGroupKey == 1) {
           group = workout.lowerBody?.groups[1].ex;
           await AsyncStorage.setItem("lGroup", `${1}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
@@ -295,7 +288,6 @@ const Home = () => {
         } else {
           group = workout.lowerBody?.groups[2].ex;
           await AsyncStorage.setItem("lGroup", `${2}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
           let newArray = Object.values(workout.lowerBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );

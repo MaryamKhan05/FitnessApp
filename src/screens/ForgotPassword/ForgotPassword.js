@@ -39,7 +39,7 @@ const ForgotPassword = () => {
             </Text>
             <TextInput
               style={[Styles.forgotInput, { alignSelf: "center" }]}
-              placeholder="maryam@gmail.com"
+              placeholder="example@gmail.com"
               onChangeText={(text) => setEmail(text)}
               autoCapitalize="none"
             />
