@@ -90,8 +90,8 @@ const Profile = () => {
   // };
   const sendEmail = () => {
     const email = "myselfmaryamkhan@gmail.com";
-    const subject = "Hello";
-    const body = "This is the body of the email.";
+    const subject = "";
+    const body = { feedback };
 
     // Combine the email, subject, and body into a mailto URL
     const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
@@ -295,7 +295,7 @@ const Profile = () => {
         </View>
       </TouchableOpacity>
 
-      <ProfileCard text="Logout" >
+      <ProfileCard text="Logout">
         <MaterialIcons
           name="logout"
           size={size}

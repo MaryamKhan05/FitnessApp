@@ -40,12 +40,12 @@ const Home = () => {
           console.log(workout.upperBody, "...");
           group = workout.upperBody?.groups[2].ex;
           await AsyncStorage.setItem("uGroup", `${2}`);
-          let equipment = await AsyncStorage.getItem("Equipments");
+          // let equipment = await AsyncStorage.getItem("Equipments");
           console.log(equipment, "---<<<");
           let newArray = Object.values(workout.upperBody?.exercises).filter(
             (exercise) => group.includes(exercise.id)
           );
-          console.log(newArray.length, "<<<<<<<=====new array");
+          // console.log(newArray.length, "<<<<<<<=====new array");
           const finalArray = newArray?.filter(
             (exercise) =>
               exercise.equipmentRequired?.some((equipmentType) =>
@@ -55,7 +55,7 @@ const Home = () => {
                 equipment.includes(equipmentType)
               )
           );
-          console.log(finalArray.length, "<----final array");
+          // console.log(finalArray.length, "<----final array");
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
         } else {
           console.log(groupId, "group id is 2");

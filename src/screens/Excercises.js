@@ -27,11 +27,27 @@ const Exercises = () => {
   const [lowerData, setLowerData] = useState();
   const [coreData, setCoreData] = useState();
   const [workoutData, setWorkoutData] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [equipment, setEquipment] = useState();
   const [exercise, setExercise] = useState();
   const [exName, setExName] = useState();
   const [gif, setGif] = useState();
+
+  const [count, setCount] = useState(0);
+  const [startTimer, setTimer] = useState(false);
+  const [rest, setRest] = useState(15);
+  const [restTimer, setRestTimer] = useState(false);
+  const [set, setSet] = useState(1);
+  const [soundChing, setSoundChing] = React.useState();
+  const [soundChaChing, setSoundChaChing] = React.useState();
+  const [restModal, setRestModal] = useState(false);
+  const [text, setText] = useState("Start");
+  const [calledOnce, setCalledOnce] = useState(false);
+  const [setNumber, setSetNumber] = useState(1);
+  const [secondsRemaining, setSecondsRemaining] = useState(10);
+  const [startButton, setStartButton] = useState(true);
+
   let exerciseArray = [];
   useEffect(() => {
     if (route.params && equipment) {
@@ -100,9 +116,145 @@ const Exercises = () => {
     let equipment = await AsyncStorage.getItem("Equipments");
     setEquipment(equipment);
   };
+
+  useEffect(() => {
+    if (startTimer == true) {
+      const countdown = setInterval(() => {
+        if (secondsRemaining > 0) {
+          setSecondsRemaining(secondsRemaining - 1);
+        } else if (secondsRemaining == 0) {
+          // setCount(count + 1);
+          if (set < 3) {
+            setText("Next");
+          }
+          setTimer(false);
+          setRestModal(true);
+          setRestTimer(true);
+          chingHandler();
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }
+  }, [secondsRemaining, startTimer]);
+
+  // rest timer
+  useEffect(() => {
+    if (restTimer) {
+      const countdown = setInterval(() => {
+        if (rest > 0) {
+          setRest(rest - 1);
+        } else if (rest == 0) {
+          setRestModal(false);
+          setRestTimer(false);
+          setRest(15);
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }
+  }, [secondsRemaining, rest, restTimer]);
+
+  const minutes = Math.floor(secondsRemaining / 60);
+  const seconds = secondsRemaining % 60;
+
+  const restMin = Math.floor(rest / 60);
+  const restSec = rest % 60;
+
+  async function loadSoundAsync(source, setSound) {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(source);
+    setSound(sound);
+  }
+
+  async function unloadSoundAsync(sound) {
+    if (sound) {
+      console.log("Unloading Sound");
+      await sound.unloadAsync();
+    }
+  }
+
+  React.useEffect(() => {
+    return () => {
+      unloadSoundAsync(soundChing);
+      unloadSoundAsync(soundChaChing);
+    };
+  }, [soundChing, soundChaChing]);
+
+  React.useEffect(() => {
+    if (soundChing) {
+      playSound(soundChing);
+    }
+  }, [soundChing]);
+
+  const chingHandler = async () => {
+    await unloadSoundAsync(soundChaChing);
+    loadSoundAsync(require("../../assets/audio/Ching.mp3"), setSoundChing);
+  };
+
+  const chachingHandler = async () => {
+    await unloadSoundAsync(soundChing);
+    loadSoundAsync(
+      require("../../assets/audio/ChaChing.mp3"),
+      setSoundChaChing
+    );
+  };
+
+  useEffect(() => {
+    if (count == 3) {
+      chachingHandler();
+    }
+  }, [count]);
+  React.useEffect(() => {
+    if (soundChaChing) {
+      playSound(soundChaChing);
+    }
+  }, [soundChaChing]);
+
+  const playSound = async (sound) => {
+    console.log("Playing Sound");
+    await sound.replayAsync();
+  };
+
+  const texthandler = () => {
+    if (set < 3) {
+      if (text == "Start") {
+        setTimer(true);
+        setText("Rest");
+        setSecondsRemaining(10);
+        setCount(count + 1);
+      } else if (text == "Rest") {
+        setRestTimer(true);
+        setRest(15);
+        setText("Next");
+        setTimer(false);
+      } else if (text == "Next") {
+        setTimer(true);
+        setText("Rest");
+        setSecondsRemaining(10);
+        setSet(set + 1);
+        setRest(false);
+      }
+    } else if (text == "Next ") {
+      setText("Start ");
+      setSet(1);
+      setRest(false);
+      setSecondsRemaining(10);
+      setTimer(false);
+      // nextHandler();
+    } else {
+      setText("Next ");
+      setSet(1);
+      setRest(false);
+      shuffleAndShowExercise();
+      setSecondsRemaining(10);
+      // nextHandler();
+      setTimer(false);
+      setText("Start ");
+    }
+  };
+
   return (
     <MainLyout heading="Workout">
-      <View>
+      {/* <View>
         <Text style={{ fontSize: 24, fontWeight: "600" }}>
           {exercise?.name}
         </Text>
@@ -117,7 +269,158 @@ const Exercises = () => {
         onPress={shuffleHandler}
       >
         <Text style={{ color: "white" }}>Next</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <Card>
+        <View style={{ alignItems: "center" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: "10%",
+            }}
+          >
+            <Text
+              style={{ fontSize: 18, fontFamily: "PoppinsSemi", margin: 5 }}
+            >
+              {exName}
+              {/* {exerciseArray[currentExerciseIndex]?.name} */}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={{ alignItems: "center", left: 20 }}
+            >
+              <AntDesign name="infocirlceo" size={20} color={"#E8A243"} />
+            </TouchableOpacity>
+          </View>
+          <Text style={{ fontSize: 14, fontFamily: "PoppinsBold", margin: 5 }}>
+            {/* Sets { set==3? set-1 :set} */}
+            {/* Set {set} */}
+          </Text>
+
+          <Divider backgroundColor="#00000029" width="90%" />
+          {/* <View style={styles.row}>
+            <Text style={styles.number}>{exercise?.reps} </Text>
+            <Text style={styles.text}>Reps</Text>
+          </View> */}
+          {/* <View style={styles.row}>
+            <Text style={styles.number}>2 min</Text>
+            <Text style={styles.text}>Rest</Text>
+          </View> */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "#F5FAFF",
+              borderRadius: 169,
+              // padding: 5,
+              paddingHorizontal: 20,
+              marginTop: "20%",
+              width: "50%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("../../assets/ferioLabs/clock.png")}
+              style={{ height: 25, width: 25 }}
+              resizeMode="contain"
+            />
+            {startTimer ? (
+              <Text style={styles.time}>{`${String(minutes).padStart(
+                2,
+                "0"
+              )} ${String(seconds).padStart(2, "0")}`}</Text>
+            ) : restTimer ? (
+              <Text style={styles.time}>{`${String(restMin).padStart(
+                2,
+                "0"
+              )} ${String(restSec).padStart(2, "0")}`}</Text>
+            ) : (
+              <Text style={styles.time}>00 10</Text>
+            )}
+
+            {/* {restTimer && (
+              <Text style={styles.time}>{`${String(restMin).padStart(
+                2,
+                "0"
+              )} ${String(restSec).padStart(2, "0")}`}</Text>
+            )} */}
+            {/* {!startTimer && !restTimer && (
+              <Text style={styles.time}>01 00</Text>
+            )} */}
+          </View>
+        </View>
+
+        {startButton ? (
+          <TouchableOpacity onPress={texthandler}>
+            <ActiveButton title={text} width="70%" />
+          </TouchableOpacity>
+        ) : (
+          <ActiveButton title={text} width="70%" />
+        )}
+      </Card>
+
+      {/* gif modal */}
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.overlay,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "white",
+              borderRadius: 20,
+              padding: 10,
+              width: "90%",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <AntDesign name="infocirlceo" size={20} color={"#E8A243"} />
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontFamily: "PoppinsSemi",
+                    margin: 5,
+                    textAlign: "center",
+                  }}
+                >
+                  {exName}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={{}}
+              >
+                <Entypo name="circle-with-cross" size={20} color={"grey"} />
+              </TouchableOpacity>
+            </View>
+            <Image
+              source={gif}
+              style={{ height: 288, width: 288, alignSelf: "center" }}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
+      </Modal>
     </MainLyout>
   );
 };
@@ -151,5 +454,4 @@ const styles = StyleSheet.create({
     // textAlign:'center'
   },
 });
-
 export default Exercises;
