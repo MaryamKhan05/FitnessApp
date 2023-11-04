@@ -18,6 +18,7 @@ import MainLyout from "./src/layouts/MainLayout";
 import AppNav from "./src/navigation/AppNavigation";
 import RegLayout from "./src/layouts/RegistrationLayout";
 import TabNav from "./src/navigation/TabNav";
+import Timer from "./src/components/timer";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -87,7 +88,8 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       {/* {loggedIn ? <TabNav /> : <AppNav />} */}
-       <AppNav />
+       {/* <AppNav /> */}
+       <Timer/>
       {/* <Text>Current state is: {appStateVisible}</Text>
       <Text>seconds {sec}</Text> */}
       {/* <Onboarding/> */}

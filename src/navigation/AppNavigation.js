@@ -48,13 +48,6 @@ const AppNav = () => {
 
     // return () => unsubscribe();
 
-
-
-
-
-
-
-
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         // User is signed in, check if email is verified
@@ -71,13 +64,15 @@ const AppNav = () => {
       }
       setLoading(false);
     });
-  
+
     return () => unsubscribe();
   }, []);
 
   const getTokenHandler = async () => {
+    console.log("hehehhehehehehehehhehehhehehehehhhehehehehhehehehehhe");
     try {
       let t = await AsyncStorage.getItem("token");
+      console.log(t, "token");
       if (t) {
         setLoggedIn(true);
       }
@@ -96,8 +91,10 @@ const AppNav = () => {
 
   return (
     <NavigationContainer>
-      {!user ? (
-        <Stack.Navigator initialRouteName={loggedIn ? "Login" : "Onboarding"}>
+      {user == false ? (
+        <Stack.Navigator
+          initialRouteName={loggedIn == true ? "Login" : "Onboarding"}
+        >
           <Stack.Screen
             name="Login"
             component={Login}

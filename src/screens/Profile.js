@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
 } from "react-native";
-
+import StarRating from "react-native-star-rating";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -27,6 +27,7 @@ import colors from "../../assets/colors/colors";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 const size = 25;
 const color = "#B1B1B1";
 const starSize = 40,
@@ -89,9 +90,9 @@ const Profile = () => {
   //   }
   // };
   const sendEmail = () => {
-    const email = "myselfmaryamkhan@gmail.com";
+    const email = "morahan.mike@gmail.com";
     const subject = "";
-    const body = { feedback };
+    const body = feedback;
 
     // Combine the email, subject, and body into a mailto URL
     const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
@@ -113,6 +114,12 @@ const Profile = () => {
   //     </View>
   //   );
   // }
+
+  const [starCount, setStarCount] = useState(3.5);
+
+  const onStarRatingPress = (rating) => {
+    setStarCount(rating);
+  };
 
   return (
     <MainLyout heading="My Profile">
@@ -330,7 +337,7 @@ const Profile = () => {
                   justifyContent: "center",
                 }}
               >
-                <TouchableOpacity onPress={() => setStar1(!star1)}>
+                {/* <TouchableOpacity onPress={() => setStar1(!star1)}>
                   {star1 ? (
                     <Entypo
                       name="star"
@@ -414,7 +421,15 @@ const Profile = () => {
                       style={styles.star}
                     />
                   )}
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+
+                <StarRating
+                  disabled={false}
+                  maxStars={5}
+                  rating={starCount}
+                  selectedStar={(rating) => onStarRatingPress(rating)}
+                  fullStarColor={starActiveColor}
+                />
               </View>
               <Text style={styles.text}>Tap a star to rate</Text>
               <View style={{ marginVertical: 10, marginTop: 20 }}>
@@ -538,11 +553,12 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "white",
-    height: 725,
+    height: heightPercentageToDP(88),
     width: 375,
     // alignItems: "center",
     alignSelf: "center",
-    borderRadius: 24,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
     width: "100%",
   },
   rateus: {

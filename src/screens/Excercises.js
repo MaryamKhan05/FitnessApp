@@ -36,24 +36,32 @@ const Exercises = () => {
   const [gif, setGif] = useState();
 
   const [startTimer, setTimer] = useState(false);
-  const [rest, setRest] = useState(15);
+  const [rest, setRest] = useState(90);
   const [restTimer, setRestTimer] = useState(false);
   const [set, setSet] = useState(1);
-  const [soundChing, setSoundChing] = React.useState();
-  const [soundChaChing, setSoundChaChing] = React.useState();
+  const [soundChing, setSoundChing] =useState();
+  const [soundChaChing, setSoundChaChing] =useState();
   const [restModal, setRestModal] = useState(false);
   const [text, setText] = useState("Start");
   const [calledOnce, setCalledOnce] = useState(false);
   const [setNumber, setSetNumber] = useState(1);
-  const [secondsRemaining, setSecondsRemaining] = useState(10);
+  const [secondsRemaining, setSecondsRemaining] = useState(60);
   const [startButton, setStartButton] = useState(true);
   const [count, setCount] = useState(0);
   const [workout, setWorkout] = useState();
 
+  
+
+
+
+
+
+
   let exerciseArray = [];
   useEffect(() => {
     if (route.params && equipment) {
-      shuffleHandler();
+      // console.log(route.params)
+      shuffleHandler(route.params);
     }
   }, [route.params, equipment]);
 
@@ -69,6 +77,7 @@ const Exercises = () => {
   const shuffleHandler = () => {
     //shuffle the array
     let array = route.params?.updatedWorkoutArray;
+    console.log(array.length, "before");
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -80,50 +89,52 @@ const Exercises = () => {
     let randomExercise = array[currentExerciseIndex];
 
     if (randomExercise?.variations?.available == true)
-      console.log("variations available");
-    if (
-      randomExercise?.equipmentRequired?.some((item) =>
-        equipment.includes(item)
-      ) ||
-      randomExercise?.equipmentOptions?.some((item) => equipment.includes(item))
-    ) {
-      console.log("helloe");
-      const variations = randomExercise?.variations;
-      const numberOfVariations = Object.keys(variations).length;
-      console.log(numberOfVariations);
-      let randomIndex = Math.floor(Math.random() * numberOfVariations);
-      console.log(randomIndex, "random i");
-      if (randomIndex !== 0) {
-        const variationIds = Object.keys(variations);
-        const selectedVariationId = variationIds[randomIndex];
-        setExercise(variations[selectedVariationId]);
-        setExName(variations[selectedVariationId].name);
-        setGif(variations[selectedVariationId].asset);
-        // setCurrentExerciseIndex(currentExerciseIndex + 1);
-        console.log(
-          "selectedVariationIdlllllljjjjjssshhs",
-          selectedVariationId
-        );
+      if (
+        randomExercise?.equipmentRequired?.some((item) =>
+          equipment.includes(item)
+        ) ||
+        randomExercise?.equipmentOptions?.some((item) =>
+          equipment.includes(item)
+        )
+      ) {
+        // console.log("variations available");
+        // console.log("helloe");
+        const variations = randomExercise?.variations;
+        const numberOfVariations = Object.keys(variations).length;
+        console.log(numberOfVariations);
+        let randomIndex = Math.floor(Math.random() * numberOfVariations);
+        // console.log(randomIndex, "random i");
+        if (randomIndex !== 0) {
+          const variationIds = Object.keys(variations);
+          const selectedVariationId = variationIds[randomIndex];
+          setExercise(variations[selectedVariationId]);
+          setExName(variations[selectedVariationId].name);
+          setGif(variations[selectedVariationId].asset);
+          // setCurrentExerciseIndex(currentExerciseIndex + 1);
+          // console.log(
+          //   "selectedVariationIdlllllljjjjjssshhs",
+          //   selectedVariationId
+          // );
+        } else {
+          // console.log("randomIndex is 0");
+          setExercise(randomExercise);
+          setExName(randomExercise.name);
+          setGif(randomExercise.asset);
+          console.log(randomExercise?.name);
+        }
+        // setLoading(false);
       } else {
-        console.log("randomIndex is 0");
         setExercise(randomExercise);
-        setExName(randomExercise.name);
-        setGif(randomExercise.asset);
-        console.log(randomExercise?.name);
-      }
-      // setLoading(false);
-    } else {
-      setExercise(randomExercise);
-      setExName(randomExercise?.name);
-      // setCurrentExerciseIndex(currentExerciseIndex + 1);
-      setGif(randomExercise?.asset);
+        setExName(randomExercise?.name);
+        // setCurrentExerciseIndex(currentExerciseIndex + 1);
+        setGif(randomExercise?.asset);
 
-      // setLoading(false);
-    }
+        // setLoading(false);
+      }
   };
 
   const nextExerciseHandler = () => {
-    if (currentExerciseIndex < workout.length-1) {
+    if (currentExerciseIndex < workout.length - 1) {
       setSet(1);
       setCount(0);
       setCurrentExerciseIndex(currentExerciseIndex + 1);
@@ -136,14 +147,12 @@ const Exercises = () => {
       const countdown = setInterval(() => {
         if (secondsRemaining > 0) {
           setSecondsRemaining(secondsRemaining - 1);
-        } else if (secondsRemaining == 0) {
+        } else if (secondsRemaining == 0 ) {
           // setCount(count + 1);
           if (set < 3) {
             setText("Next");
           }
           setTimer(false);
-          setRestModal(true);
-          setRestTimer(true);
           chingHandler();
         }
       }, 1000);
@@ -160,7 +169,7 @@ const Exercises = () => {
         } else if (rest == 0) {
           setRestModal(false);
           setRestTimer(false);
-          setRest(15);
+          setRest(90);
         }
       }, 1000);
       return () => clearInterval(countdown);
@@ -181,19 +190,19 @@ const Exercises = () => {
 
   async function unloadSoundAsync(sound) {
     if (sound) {
-      console.log("Unloading Sound");
+      // console.log("Unloading Sound");
       await sound.unloadAsync();
     }
   }
 
-  React.useEffect(() => {
+ useEffect(() => {
     return () => {
       unloadSoundAsync(soundChing);
       unloadSoundAsync(soundChaChing);
     };
   }, [soundChing, soundChaChing]);
 
-  React.useEffect(() => {
+ useEffect(() => {
     if (soundChing) {
       playSound(soundChing);
     }
@@ -201,7 +210,7 @@ const Exercises = () => {
 
   const chingHandler = async () => {
     await unloadSoundAsync(soundChaChing);
-    loadSoundAsync(require("../../assets/audio/Ching.mp3"), setSoundChing);
+    loadSoundAsync(require("../../assets/audio/DrumBuild.mp3"), setSoundChing);
   };
 
   const chachingHandler = async () => {
@@ -212,62 +221,94 @@ const Exercises = () => {
     );
   };
 
-  useEffect(() => {
-    if (count == 3) {
-      chachingHandler();
-    }
-  }, [count]);
-  React.useEffect(() => {
+
+
+ useEffect(() => {
     if (soundChaChing) {
       playSound(soundChaChing);
     }
   }, [soundChaChing]);
 
   const playSound = async (sound) => {
-    console.log("Playing Sound");
+    // console.log("Playing Sound");
     await sound.replayAsync();
   };
 
+  useEffect(() => {
+    if (set === 3 && text === "Rest" && secondsRemaining === 0) {
+      setTimer(false)
+      setText("Next Exercise");
+      chachingHandler()
+    }
+  }, [set, text, secondsRemaining]);
   const texthandler = () => {
-    console.log("start pressed 1", text);
+    // console.log("start pressed 1", text);
     if (set < 3) {
-      console.log("start pressed 2",text);
+      console.log("set", set);
       if (text == "Start") {
-        console.log("start pressed 3",text);
+        // console.log("start pressed 3",text);
         setTimer(true);
         setText("Rest");
-        setSecondsRemaining(10);
+        setSecondsRemaining(60);
         setCount(count + 1);
+      }else if (text == "Next Exercise") {
+        setText("Start");
+        setSet(1);
+        setRest(false);
+        setSecondsRemaining(60);
+        setTimer(false);
+        // nextHandler();
+        nextExerciseHandler();
+        setCount(0);
       } else if (text == "Rest") {
+        console.log("resttttttttttt")
         setRestTimer(true);
-        setRest(15);
+        setRest(90);
         setText("Next");
         setTimer(false);
       } else if (text == "Next") {
         setTimer(true);
         setText("Rest");
-        setSecondsRemaining(10);
+        setSecondsRemaining(60);
         setSet(set + 1);
         setRest(false);
+        setCount(count + 1);
       }
     } else if (text == "Next") {
+      console.log("else if (text == Next");
       setText("Start");
       setSet(1);
       setRest(false);
-      setSecondsRemaining(10);
+      setSecondsRemaining(60);
       setTimer(false);
       // nextHandler();
       nextExerciseHandler();
+      setCount(0);
+    } else if (text == "Next Exercise") {
+      setText("Start");
+      setSet(1);
+      setRest(false);
+      setSecondsRemaining(60);
+      setTimer(false);
+      // nextHandler();
+      nextExerciseHandler();
+      setCount(0);
     } else {
-      setText("Next");
-      setSet(1);
-      setRest(false);
-      // shuffleAndShowExercise();
-      nextExerciseHandler();
-      setSecondsRemaining(10);
-      // nextHandler();
+      console.log("else");
+      setText("Next Exercise");
       setTimer(false);
-      setText("Start");
+      // setSet(1);
+      setRestTimer(true);
+      setRest(90);
+      
+      // shuffleAndShowExercise();
+      // nextExerciseHandler();
+      // setSecondsRemaining(60);
+      // nextHandler();
+     
+      chachingHandler()
+      // setText("Start");
+      // setCount(0);
     }
   };
 
@@ -331,7 +372,7 @@ const Exercises = () => {
                 "0"
               )} ${String(restSec).padStart(2, "0")}`}</Text>
             ) : (
-              <Text style={styles.time}>00 10</Text>
+              <Text style={styles.time}>01 00</Text>
             )}
           </View>
         </View>

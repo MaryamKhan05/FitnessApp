@@ -38,7 +38,7 @@ const ProfileCard = (props) => {
       .signOut()
       .then(() => {
         console.log("cleared", auth.currentUser )
-        navigation.navigate("Signin")
+        // navigation.navigate("AppNav")
       })
       .catch((error) => alert(error.message));
     // console.log('helloe hterrr ')

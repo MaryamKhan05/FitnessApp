@@ -42,6 +42,7 @@ const Signin = () => {
 
   useEffect(() => {
     if (token) {
+      console.log(token,'llllll')
       saveTokenHandler();
     }
   }, [token]);
@@ -55,7 +56,7 @@ const Signin = () => {
     return unsubscribe;
   }, []);
 
-  const saveTokenHandler = async () => {
+  const saveTokenHandler = async (token) => {
     try {
       await AsyncStorage.setItem("token", token);
       console.log("saved token");
@@ -75,8 +76,9 @@ const Signin = () => {
 
     signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
       .then((userCredential) => {
-        setToken(userCredential._tokenResponse.idToken);
-        console.log("userCredential._tokenResponse", userCredential.user.uid);
+        // setToken(userCredential._tokenResponse.idToken);
+        // console.log("userCredential._tokenResponse", userCredential._tokenResponse.idToken);
+        saveTokenHandler(userCredential._tokenResponse.idToken)
         // saveUserIdHandler(userCredential.user.uid)
         setLoading(false);
         navigation.navigate("TabNav");

@@ -59,7 +59,7 @@ export const equipments = [
   },
   {
     id: 10,
-    name: "pullup bar",
+    name: "pull up bar",
     title: "Pull Up Bar",
     image: require("../assets/ferioLabs/pullupbar.png"),
   },
@@ -95,7 +95,7 @@ export const equipments = [
   },
   {
     id: 16,
-    name: "inclinable bench",
+    name: "incline bench",
     title: "Inclinable Bench",
     image: require("../assets/ferioLabs/inclinablebench.png"),
   },
@@ -134,11 +134,5 @@ export const equipments = [
     name: "elliptical trainer",
     title: "Elliptical Trainer",
     image: require("../assets/ferioLabs/ellipticaltrainer.png"),
-  },
-  {
-    id: 23,
-    name: "",
-    title: "",
-    image: require("../assets/ferioLabs/ellipticaltrainer.png"),
-  },
+  }
 ];

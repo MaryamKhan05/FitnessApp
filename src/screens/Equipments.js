@@ -30,6 +30,7 @@ const Equiments = () => {
   const navigation = useNavigation();
   const [equipmentArray, setEquipmentArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
+  const [previous, setPrevious] = useState();
   const [loading, setLoading] = useState(false);
   let selectedArray = [];
 
@@ -50,6 +51,7 @@ const Equiments = () => {
 
     try {
       await AsyncStorage.setItem("Equipments", JSON.stringify(equipmentArray));
+      console.log(equipmentArray, "equipmentArray:::::::::::==<<<<");
       console.log("equipment saved to storage");
       navigation.navigate("Home");
     } catch (e) {
@@ -68,20 +70,40 @@ const Equiments = () => {
   const loadPreviousEquipment = async () => {
     try {
       const storedEquipment = await AsyncStorage.getItem("Equipments");
+      let e = JSON.parse(storedEquipment);
+
+      // console.log(storedEquipment, "there");
+      // let eg= 'elliptical trainer'
+      // console.log(storedEquipment.includes(eg))
+      setPrevious(e);
       // console.log(storedEquipment);
-      selectedArray = storedEquipment;
-      if (storedEquipment) {
-        // Parse the stored data as JSON
-        selectedArray = JSON.parse(storedEquipment);
-        console.log(JSON.parse(storedEquipment));
-      }
+      // selectedArray = storedEquipment;
+      // if (storedEquipment) {
+      //   // Parse the stored data as JSON
+      //   selectedArray = JSON.parse(storedEquipment);
+      //   // console.log(JSON.parse(storedEquipment));
+      // }
     } catch (e) {
       console.log("Error loading equipment data from AsyncStorage", e);
     }
   };
 
   const handleClick = (name, id) => {
-    if (selectedItem.includes(id)) {
+    console.log(previous, "ppppppp", previous?.includes(name));
+    if (previous && previous?.includes(name)) {
+      // console.log(previous?.includes(name));
+      if (previous?.length > 1) {
+        setPrevious(previous?.filter((item) => item !== name));
+        console.log(
+          previous?.filter((item) => item !== name),
+          "8765444",
+          previous[0]
+        );
+      } else {
+        console.log("kkkkk");
+        setPrevious(null);
+      }
+    } else if (selectedItem.includes(id)) {
       setSelectedItem(selectedItem.filter((item) => item !== id));
       setEquipmentArray(equipmentArray.filter((item) => item !== name));
     } else {
@@ -90,9 +112,7 @@ const Equiments = () => {
     }
   };
   const renderItem = ({ item }) => {
-    // const isItemSelected = selectedArray.includes(item.name);
-    // console.log(selectedArray.includes(item.name));
-    // console.log(isItemSelected);
+    // console.log(previous?.includes(item.name), "previous");
 
     return (
       <TouchableOpacity
@@ -101,7 +121,7 @@ const Equiments = () => {
           handleClick(item.name, item.id);
         }}
       >
-        {selectedItem.includes(item.id) ? (
+        {selectedItem?.includes(item.id) || previous?.includes(item.name) ? (
           <View style={styles.iconContainer}>
             <AntDesign
               name="checkcircleo"
