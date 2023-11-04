@@ -3,14 +3,16 @@ import { View, Text, StyleSheet } from "react-native";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import colors from "../../assets/colors/colors";
 
-const Timer = () => {
+const Timer = (props) => {
   const [seconds, setSeconds] = useState(0);
   const [play, setPlay] = useState(true);
+  const [key, setKey] = useState(0);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <CountdownCircleTimer
-        isPlaying={play}
+        key={props.key}
+        isPlaying
         duration={60}
         colors={[colors.primary, "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[7, 5, 2, 0]}

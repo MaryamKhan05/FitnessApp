@@ -20,7 +20,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import workout from "../workoutList";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import Timer from "../components/timer";
 const Exercises = () => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -39,10 +40,10 @@ const Exercises = () => {
   const [rest, setRest] = useState(90);
   const [restTimer, setRestTimer] = useState(false);
   const [set, setSet] = useState(1);
-  const [soundChing, setSoundChing] =useState();
-  const [soundChaChing, setSoundChaChing] =useState();
+  const [soundChing, setSoundChing] = useState();
+  const [soundChaChing, setSoundChaChing] = useState();
   const [restModal, setRestModal] = useState(false);
-  const [text, setText] = useState("Start");
+  const [text, setText] = useState("Rest");
   const [calledOnce, setCalledOnce] = useState(false);
   const [setNumber, setSetNumber] = useState(1);
   const [secondsRemaining, setSecondsRemaining] = useState(60);
@@ -50,13 +51,23 @@ const Exercises = () => {
   const [count, setCount] = useState(0);
   const [workout, setWorkout] = useState();
 
-  
+  // background timer
 
+  const [play, setPlay] = useState(true);
+  const [duration, setDuration] = useState(10);
+  const [key, setKey] = useState(0);
+  const [call, setCall] = useState(false);
 
-
-
-
-
+  const [restPlay, setRestPlay] = useState(false);
+  const [restDuration, setRestDuration] = useState(15);
+  const [restKey, setRestKey] = useState(Date.now() + 1);
+  const resetTimer = () => {
+    setKey((prevKey) => prevKey + 1); // Change the key to reset the timer
+  };
+  const resetRestTimer = () => {
+    setRestKey((prevKey) => prevKey + 1); // Change the key to reset the timer
+  };
+  let KEY = 1;
   let exerciseArray = [];
   useEffect(() => {
     if (route.params && equipment) {
@@ -147,7 +158,7 @@ const Exercises = () => {
       const countdown = setInterval(() => {
         if (secondsRemaining > 0) {
           setSecondsRemaining(secondsRemaining - 1);
-        } else if (secondsRemaining == 0 ) {
+        } else if (secondsRemaining == 0) {
           // setCount(count + 1);
           if (set < 3) {
             setText("Next");
@@ -195,14 +206,14 @@ const Exercises = () => {
     }
   }
 
- useEffect(() => {
+  useEffect(() => {
     return () => {
       unloadSoundAsync(soundChing);
       unloadSoundAsync(soundChaChing);
     };
   }, [soundChing, soundChaChing]);
 
- useEffect(() => {
+  useEffect(() => {
     if (soundChing) {
       playSound(soundChing);
     }
@@ -210,7 +221,7 @@ const Exercises = () => {
 
   const chingHandler = async () => {
     await unloadSoundAsync(soundChaChing);
-    loadSoundAsync(require("../../assets/audio/DrumBuild.mp3"), setSoundChing);
+    loadSoundAsync(require("../../assets/audio/Ching.mp3"), setSoundChing);
   };
 
   const chachingHandler = async () => {
@@ -221,9 +232,7 @@ const Exercises = () => {
     );
   };
 
-
-
- useEffect(() => {
+  useEffect(() => {
     if (soundChaChing) {
       playSound(soundChaChing);
     }
@@ -236,22 +245,28 @@ const Exercises = () => {
 
   useEffect(() => {
     if (set === 3 && text === "Rest" && secondsRemaining === 0) {
-      setTimer(false)
+      setTimer(false);
       setText("Next Exercise");
-      chachingHandler()
+      chachingHandler();
     }
   }, [set, text, secondsRemaining]);
+
   const texthandler = () => {
     // console.log("start pressed 1", text);
     if (set < 3) {
       console.log("set", set);
       if (text == "Start") {
+        resetTimer();
         // console.log("start pressed 3",text);
         setTimer(true);
         setText("Rest");
         setSecondsRemaining(60);
         setCount(count + 1);
-      }else if (text == "Next Exercise") {
+        setPlay(true);
+        setDuration(10);
+        // resetTimer();
+        setCall(false);
+      } else if (text == "Next Exercise") {
         setText("Start");
         setSet(1);
         setRest(false);
@@ -260,19 +275,36 @@ const Exercises = () => {
         // nextHandler();
         nextExerciseHandler();
         setCount(0);
+        setRestPlay(true);
+        resetRestTimer();
+        setRestDuration(15);
+        setCall(false);
       } else if (text == "Rest") {
-        console.log("resttttttttttt")
+        console.log("resttttttttttt");
+        setPlay(false);
+        setDuration(10);
         setRestTimer(true);
         setRest(90);
         setText("Next");
         setTimer(false);
+        setRestPlay(true);
+        setRestDuration(15);
+        resetRestTimer();
+        setCall(true);
       } else if (text == "Next") {
+        console.log(duration, "duuruurururuur");
+        resetTimer();
         setTimer(true);
+        setPlay(true);
+        setDuration(10);
         setText("Rest");
         setSecondsRemaining(60);
         setSet(set + 1);
         setRest(false);
         setCount(count + 1);
+        setRestPlay(false);
+        setRestDuration(15);
+        setCall(false);
       }
     } else if (text == "Next") {
       console.log("else if (text == Next");
@@ -280,19 +312,30 @@ const Exercises = () => {
       setSet(1);
       setRest(false);
       setSecondsRemaining(60);
+      setDuration(10);
+      // resetTimer();
       setTimer(false);
       // nextHandler();
+      setCall(false);
       nextExerciseHandler();
       setCount(0);
+      setRestPlay(false);
+      setRestDuration(15);
+      resetRestTimer();
     } else if (text == "Next Exercise") {
       setText("Start");
       setSet(1);
       setRest(false);
       setSecondsRemaining(60);
+      setDuration(10);
       setTimer(false);
       // nextHandler();
       nextExerciseHandler();
       setCount(0);
+      setRestPlay(false);
+      setRestDuration(15);
+      // resetTimer();
+      setCall(false);
     } else {
       console.log("else");
       setText("Next Exercise");
@@ -300,18 +343,30 @@ const Exercises = () => {
       // setSet(1);
       setRestTimer(true);
       setRest(90);
-      
-      // shuffleAndShowExercise();
-      // nextExerciseHandler();
-      // setSecondsRemaining(60);
-      // nextHandler();
-     
-      chachingHandler()
-      // setText("Start");
-      // setCount(0);
+      setPlay(false);
+      setDuration(10);
+      setRestPlay(true);
+      setRestDuration(15);
+      chachingHandler();
+      setCall(true);
     }
   };
 
+  const soundHandler = () => {
+    if (set === 2 || set === 1) {
+      setText("Next");
+      chingHandler();
+    }
+  };
+
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedTime = `${String(minutes).padStart(2, "0")} ${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
+    return formattedTime;
+  }
   return (
     <MainLyout heading="Workout">
       <Card>
@@ -342,7 +397,7 @@ const Exercises = () => {
           </Text>
 
           <Divider backgroundColor="#00000029" width="90%" />
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -374,7 +429,55 @@ const Exercises = () => {
             ) : (
               <Text style={styles.time}>01 00</Text>
             )}
-          </View>
+          </View> */}
+
+          {/* exercise timer */}
+          {play && (
+            <CountdownCircleTimer
+              key={key}
+              isPlaying={play}
+              duration={60}
+              colors={[colors.primary, "#F7B801", "#A30000", "#A30000"]}
+              colorsTime={[7, 5, 2, 0]}
+              size={80}
+              strokeWidth={0}
+              onComplete={soundHandler}
+            >
+              {({ remainingTime }) => (
+                <Text style={{ fontSize: 20, fontWeight: "900" }}>
+                  {formatTime(remainingTime)}
+                </Text>
+              )}
+            </CountdownCircleTimer>
+          )}
+
+          {/* rest timer */}
+
+          {restPlay && (
+            <CountdownCircleTimer
+              key={restKey}
+              isPlaying={restPlay}
+              duration={90}
+              colors={[colors.primary, "#F7B801", "#A30000", "#A30000"]}
+              colorsTime={[7, 5, 2, 0]}
+              size={80}
+              strokeWidth={0}
+              stroke={false}
+              onComplete={() => setRestDuration(10)}
+            >
+              {({ remainingTime }) => (
+                <Text style={{ fontSize: 20, fontWeight: "900" }}>
+                  {formatTime(remainingTime)}
+                </Text>
+              )}
+            </CountdownCircleTimer>
+          )}
+
+          {!restPlay && !play && (
+            <Text style={{ fontSize: 20, fontWeight: "900", padding: 25 }}>
+              00 00
+            </Text>
+          )}
         </View>
 
         {startButton ? (

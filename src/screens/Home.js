@@ -60,7 +60,7 @@ const Home = () => {
           // console.log(newArray, "<<<<<<<=====new array");
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           // console.log(finalArray, "<----final array");
@@ -75,7 +75,7 @@ const Home = () => {
           // console.log(newArray, "<<<<<<<=====new array");
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           // console.log(finalArray, "<----final array");
@@ -108,7 +108,7 @@ const Home = () => {
           // );
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -120,7 +120,7 @@ const Home = () => {
           );
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -148,7 +148,7 @@ const Home = () => {
           );
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -162,10 +162,10 @@ const Home = () => {
           const finalArray = newArray?.filter(
             (exercise) =>
               exercise.equipmentRequired?.some((equipmentType) =>
-                equipment.includes(equipmentType)
+                equipment?.includes(equipmentType)
               ) ||
               exercise.equipmentOptions?.some((equipmentType) =>
-                equipment.includes(equipmentType)
+                equipment?.includes(equipmentType)
               )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -191,7 +191,7 @@ const Home = () => {
           );
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -203,7 +203,7 @@ const Home = () => {
           );
           const finalArray = newArray?.filter((exercise) =>
             exercise.equipmentRequired?.some((equipmentType) =>
-              equipment.includes(equipmentType)
+              equipment?.includes(equipmentType)
             )
           );
           updatedWorkoutArray = [...updatedWorkoutArray, ...finalArray];
@@ -301,7 +301,7 @@ const Home = () => {
       ).filter(
         (exercise) =>
           Array.isArray(exercise.equipmentRequired) &&
-          exercise.equipmentRequired.includes("")
+          exercise?.equipmentRequired.includes("")
       );
       updatedWorkoutArray = [...updatedWorkoutArray, ...upperbodyWeightEx];
 
@@ -316,7 +316,7 @@ const Home = () => {
       let coreWeightEx = Object.values(workout.core?.exercises).filter(
         (exercise) =>
           Array.isArray(exercise.equipmentRequired) &&
-          exercise.equipmentRequired.includes("")
+          exercise?.equipmentRequired?.includes("")
       );
       updatedWorkoutArray = [...updatedWorkoutArray, ...coreWeightEx];
       if (upperGroup !== null) {

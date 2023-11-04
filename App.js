@@ -88,8 +88,8 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       {/* {loggedIn ? <TabNav /> : <AppNav />} */}
-       {/* <AppNav /> */}
-       <Timer/>
+       <AppNav />
+       {/* <Timer/> */}
       {/* <Text>Current state is: {appStateVisible}</Text>
       <Text>seconds {sec}</Text> */}
       {/* <Onboarding/> */}
