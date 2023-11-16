@@ -69,7 +69,7 @@ const AppNav = () => {
   }, []);
 
   const getTokenHandler = async () => {
-    console.log("hehehhehehehehehehhehehhehehehehhhehehehehhehehehehhe");
+    // console.log("hehehhehehehehehehhehehhehehehehhhehehehehhehehehehhe");
     try {
       let t = await AsyncStorage.getItem("token");
       console.log(t, "token");
